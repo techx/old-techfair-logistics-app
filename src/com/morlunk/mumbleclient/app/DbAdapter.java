@@ -21,8 +21,7 @@ class DbAdapter {
 					   + "`host` TEXT NOT NULL,"
 					   + "`port` INTEGER,"
 					   + "`username` TEXT NOT NULL,"
-					   + "`password` TEXT,"
-					   + "`lastchannel` INTEGER"
+					   + "`password` TEXT"
 					   + ");");
 		}
 

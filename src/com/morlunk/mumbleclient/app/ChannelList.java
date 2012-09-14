@@ -2,6 +2,7 @@ package com.morlunk.mumbleclient.app;
 
 import java.util.List;
 
+import android.R.integer;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
@@ -222,7 +223,8 @@ public class ChannelList extends ConnectedActivity {
 	public static final String SAVED_STATE_VISIBLE_CHANNEL = "visible_channel";
 
 	Channel visibleChannel;
-
+	private ChannelSpinnerAdapter channelAdapter;
+	
 	private ListView channelUsersList;
 	private UserListAdapter usersAdapter;
 	private TextView noUsersText;
@@ -299,6 +301,15 @@ public class ChannelList extends ConnectedActivity {
 			final Intent i = new Intent(this, ChatActivity.class);
 			startActivity(i);
 			return true;
+		case R.id.menu_disconnect_item:
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					mService.disconnect();
+				}
+			}).start();
+			finish();
+			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
@@ -347,12 +358,13 @@ public class ChannelList extends ConnectedActivity {
 		
 		// Load channels into spinner adapter
 		ActionBar actionBar = getActionBar();
-		final ChannelSpinnerAdapter channelSpinner = new ChannelSpinnerAdapter(mService.getChannelList());
-		actionBar.setListNavigationCallbacks(channelSpinner, new OnNavigationListener() {
+		selectableChannels = mService.getChannelList();
+		channelAdapter = new ChannelSpinnerAdapter(selectableChannels);
+		actionBar.setListNavigationCallbacks(channelAdapter, new OnNavigationListener() {
 			
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-				setChannel(channelSpinner.getItem(itemPosition));
+				setChannel(channelAdapter.getItem(itemPosition));
 				return false;
 			}
 			
@@ -367,6 +379,10 @@ public class ChannelList extends ConnectedActivity {
 		if (visibleChannel == null) {
 			setChannel(mService.getCurrentChannel());
 		} else {
+			// Re-select visible channel. Necessary after a rotation is performed or the app is suspended.
+			if(selectableChannels.contains(visibleChannel)) {
+				getActionBar().setSelectedNavigationItem(selectableChannels.indexOf(visibleChannel));
+			}
 			synchronizeControls();
 			usersAdapter.notifyDataSetChanged();
 		}
