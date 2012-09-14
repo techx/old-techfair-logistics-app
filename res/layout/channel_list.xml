@@ -8,30 +8,14 @@
 	android:layout_height="fill_parent">
 
 	<!-- Channel name + Browse row -->
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent">
-		<TextView
-			android:id="@+id/channelName"
-			android:textSize="30sp"
-			android:layout_height="fill_parent"
-			android:layout_weight="1"
-			android:gravity="center_vertical"
-			android:layout_width="wrap_content" />
-
-		<Button
-			android:id="@+id/browseButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/channels" />
-	</LinearLayout>
 
 	<TextView
 		android:id="@+id/noUsersText"
 		android:text="@string/noUsers"
-		android:textSize="40sp"
+		android:textSize="28sp"
 		android:layout_height="fill_parent"
 		android:gravity="center"
+		android:textColor="@android:color/secondary_text_dark"
 		android:layout_width="fill_parent"
 		android:layout_weight="1" />
 	<ListView
@@ -65,7 +49,7 @@
 			android:id="@+id/joinButton"
 			android:text="@string/userJoin"
 			android:textSize="20sp"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:visibility="gone" />
 		<ToggleButton
@@ -75,7 +59,7 @@
 			android:textOn="@string/userSpeak"
 			android:textSize="20sp"
 			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_weight="1" />
 
 		<!-- Speaker checkbox -->

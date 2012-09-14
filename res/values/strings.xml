@@ -3,9 +3,9 @@
 	<string name="channels">Channels</string>
 	<string name="userJoin">Join channel</string>
 	<string name="userSpeak">Speak</string>
-	<string name="noServers">Server list empty\nPress Menu key to add a server</string>
+	<string name="noServers">no servers added</string>
 	<string name="noChannels">Channel list empty</string>
-	<string name="noUsers">User list empty</string>
+	<string name="noUsers">no users</string>
 	<string name="serverAdd">Add Server</string>
 	<string name="serverChange">Change Server</string>
 	<string name="serverPassword">Password</string>
@@ -14,7 +14,7 @@
 	<string name="serverHost">Address</string>
 	<string name="serverName">Label (Optional)</string>
 	<string name="sendText">Send</string>
-	<string name="app_name">Mumble</string>
+	<string name="app_name">Morlunk Mumble</string>
 	<string name="server_deleted">Server deleted</string>
 	<string name="chat_message">Chat message</string>
 	<string name="chatReceiverLabel">Receiver</string>
@@ -23,4 +23,5 @@
 	<string name="connectionProgressConnectingMessage">Connecting to Mumble</string>
 	<string name="connectionProgressSynchronizingMessage">Synchronizing data with Mumble</string>
 	<string name="connectionProgressDisconnectingMessage">Disconnecting...</string>
+	<string name="defaultServerPort">64738</string>
 </resources>

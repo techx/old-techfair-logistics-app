@@ -27,12 +27,11 @@ void cacheJitterBufferPacketFields(JNIEnv *env, jobject lpObject)
 JitterBufferPacket *getJitterBufferPacketFields(JNIEnv *env, jobject lpObject, JitterBufferPacket *lpStruct)
 {
 	if (!JitterBufferPacketFc.cached) cacheJitterBufferPacketFields(env, lpObject);
-	lpStruct->len = (*env)->GetIntField(env, lpObject, JitterBufferPacketFc.len);
 	{
-	lpStruct->data = malloc(lpStruct->len);
 	jbyteArray lpObject1 = (jbyteArray)(*env)->GetObjectField(env, lpObject, JitterBufferPacketFc.data);
-	(*env)->GetByteArrayRegion(env, lpObject1, 0, lpStruct->len, (jbyte *)lpStruct->data);
+	(*env)->GetByteArrayRegion(env, lpObject1, 0, sizeof(lpStruct->data), (jbyte *)lpStruct->data);
 	}
+	lpStruct->len = (*env)->GetIntField(env, lpObject, JitterBufferPacketFc.len);
 	lpStruct->timestamp = (*env)->GetIntField(env, lpObject, JitterBufferPacketFc.timestamp);
 	lpStruct->span = (*env)->GetIntField(env, lpObject, JitterBufferPacketFc.span);
 	lpStruct->sequence = (*env)->GetShortField(env, lpObject, JitterBufferPacketFc.sequence);
@@ -45,8 +44,7 @@ void setJitterBufferPacketFields(JNIEnv *env, jobject lpObject, JitterBufferPack
 	if (!JitterBufferPacketFc.cached) cacheJitterBufferPacketFields(env, lpObject);
 	{
 	jbyteArray lpObject1 = (jbyteArray)(*env)->GetObjectField(env, lpObject, JitterBufferPacketFc.data);
-	(*env)->SetByteArrayRegion(env, lpObject1, 0, lpStruct->len, (jbyte *)lpStruct->data);
-	free(lpStruct->data);
+	(*env)->SetByteArrayRegion(env, lpObject1, 0, sizeof(lpStruct->data), (jbyte *)lpStruct->data);
 	}
 	(*env)->SetIntField(env, lpObject, JitterBufferPacketFc.len, (jint)lpStruct->len);
 	(*env)->SetIntField(env, lpObject, JitterBufferPacketFc.timestamp, (jint)lpStruct->timestamp);

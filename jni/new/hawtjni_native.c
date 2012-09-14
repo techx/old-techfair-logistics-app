@@ -4,9 +4,7 @@
 #include "hawtjni_native_structs.h"
 #include "hawtjni_native_stats.h"
 
-#undef JNIEXPORT
-#define JNIEXPORT __attribute__ ((visibility("default")))
-#define Native_NATIVE(func) Java_org_pcgod_mumbleclient_jni_Native_##func
+#define Native_NATIVE(func) Java_com_morlunk_mumbleclient_jni_Native_##func
 
 JNIEXPORT jint JNICALL Native_NATIVE(celt_1decode)
 	(JNIEnv *env, jclass that, jlong arg0, jbyteArray arg1, jint arg2, jshortArray arg3)

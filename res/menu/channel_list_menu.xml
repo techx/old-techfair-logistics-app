@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_chat_item" android:title="Chat" android:showAsAction="always|withText"></item>
+    <item android:id="@+id/menu_disconnect_item" android:title="Disconnect"></item>
+    
+    
+
+</menu>
