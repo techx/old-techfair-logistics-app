@@ -252,7 +252,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 					protected void onPostExecute(Void result) {
 						super.onPostExecute(result);
 						setChannel(channelAdapter.getItem(itemPosition));
-						chatFragment.clear();
 					}
 				}.execute(channelAdapter.getItem(itemPosition));
 				return true;

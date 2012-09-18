@@ -9,10 +9,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,8 +40,6 @@ public class ChannelChatFragment extends Fragment {
 	private ChannelProvider channelProvider;
 	private TextView chatText;
 	private EditText chatTextEdit;
-
-	private static final int MENU_CLEAR = Menu.FIRST;
 
 	private final OnEditorActionListener chatTextEditActionEvent = new OnEditorActionListener() {
 		@Override
@@ -109,6 +105,14 @@ public class ChannelChatFragment extends Fragment {
 		view.findViewById(R.id.send_button).setOnClickListener(sendOnClickEvent);
 		updateText();
 		return view;
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 	void addMessage(final Message msg) {
