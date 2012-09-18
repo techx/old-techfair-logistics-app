@@ -15,7 +15,7 @@
     <string name="serverHost">Address</string>
     <string name="serverName">Label (Optional)</string>
     <string name="sendText">Send</string>
-    <string name="app_name">Morlunk Mumble</string>
+    <string name="app_name">Plumble</string>
     <string name="server_deleted">Server deleted</string>
     <string name="chat_message">Chat message</string>
     <string name="chatReceiverLabel">Receiver</string>
@@ -23,7 +23,7 @@
     <string name="connectionProgressTitle">Establishing Connection</string>
     <string name="connectionProgressConnectingMessage">Connecting to Mumble</string>
     <string name="connectionProgressSynchronizingMessage">Synchronizing data with Mumble</string>
-    <string name="connectionProgressDisconnectingMessage">Disconnecting...</string>
+    <string name="connectionProgressDisconnectingMessage">Disconnecting…</string>
     <string name="defaultServerPort">64738</string>
     <string name="title_section2">Chat</string>
     <string name="title_section1">Channel</string>

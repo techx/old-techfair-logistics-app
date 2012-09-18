@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -102,7 +103,7 @@ public class ChannelChatFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.chat_view, container, false);
 		chatText = (TextView) view.findViewById(R.id.chatText);
-		chatText.setMovementMethod(ScrollingMovementMethod.getInstance());
+		chatText.setMovementMethod(LinkMovementMethod.getInstance());
 		chatTextEdit = (EditText) view.findViewById(R.id.chatTextEdit);
 		chatTextEdit.setOnEditorActionListener(chatTextEditActionEvent);
 		view.findViewById(R.id.send_button).setOnClickListener(sendOnClickEvent);
