@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
-import com.morlunk.mumbleclient.app.ChannelList;
+import com.morlunk.mumbleclient.app.ChannelActivity;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;
 import com.morlunk.mumbleclient.service.audio.RecordThread;
 import com.morlunk.mumbleclient.service.model.Channel;
@@ -690,7 +690,7 @@ public class MumbleService extends Service {
 
 		final Intent channelListIntent = new Intent(
 			MumbleService.this,
-			ChannelList.class);
+			ChannelActivity.class);
 		channelListIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(
 			Intent.FLAG_ACTIVITY_NEW_TASK);
 		mNotification.setLatestEventInfo(

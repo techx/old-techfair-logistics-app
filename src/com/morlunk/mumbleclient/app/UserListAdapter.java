@@ -35,7 +35,7 @@ public class UserListAdapter extends BaseAdapter {
 	private final Map<Integer, User> users = new HashMap<Integer, User>();
 	private final Map<Integer, String> visibleUserNames = new HashMap<Integer, String>();
 	private final List<User> visibleUserList = new ArrayList<User>();
-	private final ListView stupidList;
+	private ListView stupidList;
 	private int visibleChannel = -1;
 
 	private final Runnable visibleUsersChangedCallback;
@@ -44,7 +44,7 @@ public class UserListAdapter extends BaseAdapter {
 
 	public UserListAdapter(
 		final Context context,
-		final ListView stupidList,
+		ListView stupidList,
 		final Runnable visibleUsersChangedCallback) {
 		this.context = context;
 		this.stupidList = stupidList; // Stupid list is stupid.
@@ -295,4 +295,16 @@ public class UserListAdapter extends BaseAdapter {
 		visibleUserList.set(position, user);
 		visibleUserNames.put(user.session, user.name);
 	}
+
+	/**
+	 * @return the stupidList
+	 */
+	public ListView getStupidList() {
+		return stupidList;
+	}
+	
+	public void setStupidList(ListView listView) {
+		stupidList = listView;
+	}
+	
 }

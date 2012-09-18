@@ -218,7 +218,7 @@ public class ServerList extends ConnectedListActivity {
 		case MumbleService.CONNECTION_STATE_SYNCHRONIZING:
 		case MumbleService.CONNECTION_STATE_CONNECTED:
 			unregisterConnectionReceiver();
-			final Intent i = new Intent(this, ChannelList.class);
+			final Intent i = new Intent(this, ChannelActivity.class);
 			startActivityForResult(i, ACTIVITY_CHANNEL_LIST);
 			return true;
 		case MumbleService.CONNECTION_STATE_DISCONNECTED:

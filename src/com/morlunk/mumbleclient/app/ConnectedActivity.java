@@ -1,14 +1,15 @@
 package com.morlunk.mumbleclient.app;
 
-import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
-import com.morlunk.mumbleclient.service.IServiceObserver;
-import com.morlunk.mumbleclient.service.MumbleService;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
+
+import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
+import com.morlunk.mumbleclient.service.IServiceObserver;
+import com.morlunk.mumbleclient.service.MumbleService;
 
 /**
  * Base class for activities that want to access the MumbleService
@@ -18,7 +19,7 @@ import android.widget.Toast;
  * @author Rantanen
  *
  */
-public class ConnectedActivity extends Activity {
+public class ConnectedActivity extends FragmentActivity {
 	private final Host logicHost = new Host() {
 		@Override
 		public boolean bindService(

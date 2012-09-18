@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:versionCode="2" android:versionName="1.01" package="com.morlunk.mumbleclient"
-	android:installLocation="auto">
-	<uses-sdk android:targetSdkVersion="16" android:minSdkVersion="11" />
-	<application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
-		<activity android:label="@string/app_name" android:name=".app.ServerList">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".app.Preferences" />
-		<activity android:name=".app.ServerInfo" />
-		<activity android:name=".app.ChannelList" android:launchMode="singleTask" uiOptions="splitActionBarWhenNarrow"/>
-		<activity android:name=".app.ChatActivity" />
-		<service android:enabled="true" android:name=".service.MumbleService" />
-	</application>
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-feature android:name="android.hardware.microphone" />
+    package="com.morlunk.mumbleclient"
+    android:installLocation="auto"
+    android:versionCode="5"
+    android:versionName="1.1b" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
+        <activity
+            android:name=".app.ServerList"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".app.Preferences" />
+        <activity android:name=".app.ServerInfo" />
+        <activity android:name=".app.ChannelListFragment" />
+        <activity android:name=".app.ChannelChatFragment" />
+
+        <service
+            android:name=".service.MumbleService"
+            android:enabled="true" />
+
+        <activity
+            android:name=".app.ChannelActivity"
+            android:label="@string/title_activity_channel" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.microphone" />
+
 </manifest>
