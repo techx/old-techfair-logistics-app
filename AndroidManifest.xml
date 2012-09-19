@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.morlunk.mumbleclient"
     android:installLocation="auto"
-    android:versionCode="7"
-    android:versionName="1.1d" >
+    android:versionCode="8"
+    android:versionName="1.2a" >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="16" />
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.microphone" />
+    
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -22,6 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".app.ChannelActivity" android:launchMode="singleInstance"/>
         <activity android:name=".app.Preferences" />
         <activity android:name=".app.ServerInfo" />
         <activity android:name=".app.ChannelListFragment" />
@@ -30,21 +34,9 @@
         <service
             android:name=".service.MumbleService"
             android:enabled="true" />
-
-        <activity
-            android:name=".app.ChannelActivity"
-            android:label="@string/title_activity_channel" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <service
+            android:name=".service.MumbleNotificationService"
+            android:enabled="true" />
     </application>
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-feature android:name="android.hardware.microphone" />
 
 </manifest>

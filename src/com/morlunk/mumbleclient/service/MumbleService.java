@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import junit.framework.Assert;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,6 +21,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
@@ -379,6 +382,8 @@ public class MumbleService extends Service {
 	public static final String EXTRA_USERNAME = "mumbleclient.extra.USERNAME";
 	public static final String EXTRA_PASSWORD = "mumbleclient.extra.PASSWORD";
 	public static final String EXTRA_USER = "mumbleclient.extra.USER";
+	
+	private static MumbleService currentService;
 
 	private MumbleConnection mClient;
 	private MumbleProtocol mProtocol;
@@ -386,7 +391,8 @@ public class MumbleService extends Service {
 	private Thread mClientThread;
 	private Thread mRecordThread;
 
-	Notification mNotification;;
+	Notification mNotification;
+	Notification.Builder mNotificationBuilder;
 
 	private final LocalBinder mBinder = new LocalBinder();
 	final Handler handler = new Handler();
@@ -416,6 +422,14 @@ public class MumbleService extends Service {
 	private ServiceConnectionHost mConnectionHost;
 	private ServiceAudioOutputHost mAudioHost;
 
+	/**
+	 * Gets the current mumble service (the last one spawned).
+	 * @return
+	 */
+	public static MumbleService getCurrentService() {
+		return currentService;
+	}
+	
 	public boolean canSpeak() {
 		return mProtocol != null && mProtocol.canSpeak;
 	}
@@ -505,6 +519,8 @@ public class MumbleService extends Service {
 
 		Log.i(Globals.LOG_TAG, "MumbleService: Created");
 		serviceState = CONNECTION_STATE_DISCONNECTED;
+		
+		currentService = this;
 	}
 
 	@Override
@@ -542,6 +558,7 @@ public class MumbleService extends Service {
 		mClient.sendUdpMessage(buffer, length, false);
 	}
 
+	@TargetApi(16)
 	public void setRecording(final boolean state) {
 		if (mProtocol != null && mProtocol.currentUser != null &&
 			mRecordThread == null && state) {
@@ -559,6 +576,16 @@ public class MumbleService extends Service {
 			mAudioHost.setTalkState(
 				mProtocol.currentUser,
 				AudioOutputHost.STATE_PASSIVE);
+		}
+		
+		if(android.os.Build.VERSION.SDK_INT >= 16) {
+			mNotificationBuilder.setContentText("Recording is "+(state ? "ON" : "OFF")+".");
+			//mNotificationBuilder.setTicker("Recording "+(state ? "ON" : "OFF"));
+			mNotificationBuilder.setSmallIcon(state ? R.drawable.talking_on : R.drawable.talking_off);
+			mNotification = mNotificationBuilder.build();
+			startForegroundCompat(1, mNotification);
+		} else {
+			// i dunno, TODO implement for older SDK versions
 		}
 	}
 
@@ -681,8 +708,16 @@ public class MumbleService extends Service {
 			mNotification = null;
 		}
 	}
-
+	
 	void showNotification() {
+		if(android.os.Build.VERSION.SDK_INT >= 16) {
+			showJellybeanNotification();
+		} else {
+			showFallbackNotification();
+		}
+	}
+	
+	void showFallbackNotification() {
 		mNotification = new Notification(
 			R.drawable.icon,
 			"Mumble connected",
@@ -695,13 +730,40 @@ public class MumbleService extends Service {
 			Intent.FLAG_ACTIVITY_NEW_TASK);
 		mNotification.setLatestEventInfo(
 			MumbleService.this,
-			"Mumble",
-			"Mumble is connected to a server",
+			"Plumble",
+			"Plumble is connected to a server",
 			PendingIntent.getActivity(
 				MumbleService.this,
 				0,
 				channelListIntent,
 				0));
+		startForegroundCompat(1, mNotification);
+	}
+
+	@TargetApi(16)
+	void showJellybeanNotification() {
+		Notification.Builder builder = new Notification.Builder(this);
+		builder.setSmallIcon(R.drawable.talking_off);
+		builder.setTicker("Plumble Connected");
+		builder.setContentTitle("Plumble");
+		builder.setContentText("Recording is OFF.");
+		builder.setPriority(Notification.PRIORITY_HIGH);
+		
+		// Add notification triggers
+		Intent intent = new Intent(this, MumbleNotificationService.class);
+		intent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_TALK);
+		builder.addAction(R.drawable.microphone, "Toggle Recording", PendingIntent.getService(this, 0, intent, 0));
+		
+		Intent channelListIntent = new Intent(
+			MumbleService.this,
+			ChannelActivity.class);
+		
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, channelListIntent, 0);
+		
+		builder.setContentIntent(pendingIntent);
+		
+		mNotification = builder.build();
+		mNotificationBuilder = builder;
 		startForegroundCompat(1, mNotification);
 	}
 
