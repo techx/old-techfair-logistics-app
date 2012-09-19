@@ -179,7 +179,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     protected void onResume() {
     	super.onResume();
     	
-    	if(recordItem != null) {
+    	if(recordItem != null && mService != null) {
     		recordItem.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
     	}
     }
