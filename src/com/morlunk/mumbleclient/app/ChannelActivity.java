@@ -206,7 +206,14 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			item.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
 			return true;
 		case R.id.menu_disconnect_item:
-			mService.disconnect();
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					mService.disconnect();
+					
+				}
+			}).start();
 			return true;
 		}
     	
