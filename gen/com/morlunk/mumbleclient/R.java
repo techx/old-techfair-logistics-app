@@ -23,13 +23,14 @@ public final class R {
     }
     public static final class drawable {
         public static final int deafened=0x7f020000;
-        public static final int ic_action_search=0x7f020001;
-        public static final int icon=0x7f020002;
-        public static final int microphone=0x7f020003;
-        public static final int microphone_muted=0x7f020004;
-        public static final int muted=0x7f020005;
-        public static final int talking_off=0x7f020006;
-        public static final int talking_on=0x7f020007;
+        public static final int disconnect=0x7f020001;
+        public static final int ic_action_search=0x7f020002;
+        public static final int icon=0x7f020003;
+        public static final int microphone=0x7f020004;
+        public static final int microphone_muted=0x7f020005;
+        public static final int muted=0x7f020006;
+        public static final int talking_off=0x7f020007;
+        public static final int talking_on=0x7f020008;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f09000a;
@@ -38,8 +39,8 @@ public final class R {
         public static final int chatText=0x7f090009;
         public static final int chatTextEdit=0x7f09000b;
         public static final int connectionViewRoot=0x7f090002;
-        public static final int menu_chat_item=0x7f09001b;
-        public static final int menu_disconnect_item=0x7f09001c;
+        public static final int menu_chat_item=0x7f09001c;
+        public static final int menu_disconnect_item=0x7f09001b;
         public static final int menu_talk_item=0x7f09001a;
         public static final int noUsersText=0x7f090003;
         public static final int pager=0x7f090000;

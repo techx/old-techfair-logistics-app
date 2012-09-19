@@ -72,6 +72,9 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	private ChannelListFragment listFragment;
 	private ChannelChatFragment chatFragment;
 
+	// Menu items
+	private MenuItem recordItem;
+	
 	private Settings settings;
 	
 	public final DialogInterface.OnClickListener onDisconnectConfirm = new DialogInterface.OnClickListener() {
@@ -168,10 +171,26 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     	getSupportFragmentManager().putFragment(outState, ChannelChatFragment.class.getName(), chatFragment);
 		outState.putParcelable(SAVED_STATE_VISIBLE_CHANNEL, visibleChannel);
     }
+    
+    /* (non-Javadoc)
+     * @see com.morlunk.mumbleclient.app.ConnectedActivity#onResume()
+     */
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	
+    	if(recordItem != null) {
+    		recordItem.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
+    	}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_channel, menu);
+        
+        // Store recording icon to adjust for recording changes
+        recordItem = menu.findItem(R.id.menu_talk_item);
+        
         return true;
     }
     
@@ -185,6 +204,9 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		case R.id.menu_talk_item:
 			mService.setRecording(!mService.isRecording());
 			item.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
+			return true;
+		case R.id.menu_disconnect_item:
+			mService.disconnect();
 			return true;
 		}
     	

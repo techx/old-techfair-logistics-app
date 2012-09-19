@@ -16,6 +16,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -579,9 +581,9 @@ public class MumbleService extends Service {
 		}
 		
 		if(android.os.Build.VERSION.SDK_INT >= 16) {
-			mNotificationBuilder.setContentText("Recording is "+(state ? "ON" : "OFF")+".");
 			//mNotificationBuilder.setTicker("Recording "+(state ? "ON" : "OFF"));
-			mNotificationBuilder.setSmallIcon(state ? R.drawable.talking_on : R.drawable.talking_off);
+			mNotificationBuilder.setSmallIcon(state ? R.drawable.microphone : R.drawable.microphone_muted);
+			mNotificationBuilder.setSubText("Recording is "+(state ? "ON" : "OFF")+".");
 			mNotification = mNotificationBuilder.build();
 			startForegroundCompat(1, mNotification);
 		} else {
@@ -743,10 +745,11 @@ public class MumbleService extends Service {
 	@TargetApi(16)
 	void showJellybeanNotification() {
 		Notification.Builder builder = new Notification.Builder(this);
-		builder.setSmallIcon(R.drawable.talking_off);
+		builder.setSmallIcon(R.drawable.microphone);
 		builder.setTicker("Plumble Connected");
 		builder.setContentTitle("Plumble");
-		builder.setContentText("Recording is OFF.");
+		builder.setContentText("Connected to a Mumble server.");
+		builder.setSubText("Recording is OFF.");
 		builder.setPriority(Notification.PRIORITY_HIGH);
 		
 		// Add notification triggers

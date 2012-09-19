@@ -1,3 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_talk_item" android:title="Talk" android:icon="@drawable/microphone_muted" android:showAsAction="always"></item>
+    <item android:id="@+id/menu_disconnect_item" android:showAsAction="never" android:icon="@drawable/disconnect" android:title="Disconnect"></item>
 </menu>
