@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.morlunk.mumbleclient"
     android:installLocation="auto"
-    android:versionCode="10"
-    android:versionName="1.2c" >
+    android:versionCode="11"
+    android:versionName="1.3" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -25,11 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".app.ServerInfo" android:parentActivityName=".app.ServerList"/>
         <activity android:name=".app.ChannelActivity" android:launchMode="singleInstance"/>
-        <activity android:name=".app.Preferences" />
-        <activity android:name=".app.ServerInfo" />
-        <activity android:name=".app.ChannelListFragment" />
-        <activity android:name=".app.ChannelChatFragment" />
+        <activity android:name=".app.Preferences" android:parentActivityName=".app.ServerList"/>
 
         <service
             android:name=".service.MumbleService"

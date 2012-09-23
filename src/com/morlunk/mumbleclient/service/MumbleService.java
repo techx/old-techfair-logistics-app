@@ -16,18 +16,16 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
+import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.app.ChannelActivity;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;
 import com.morlunk.mumbleclient.service.audio.RecordThread;
@@ -50,7 +48,7 @@ public class MumbleService extends Service {
 		}
 	}
 
-	class ServiceAudioOutputHost extends AbstractHost implements
+	public class ServiceAudioOutputHost extends AbstractHost implements
 		AudioOutputHost {
 		abstract class ServiceProtocolMessage extends ProtocolMessage {
 			@Override
@@ -76,7 +74,7 @@ public class MumbleService extends Service {
 		}
 	}
 
-	class ServiceConnectionHost extends AbstractHost implements
+	public class ServiceConnectionHost extends AbstractHost implements
 		MumbleConnectionHost {
 		abstract class ServiceProtocolMessage extends ProtocolMessage {
 			@Override
@@ -390,11 +388,13 @@ public class MumbleService extends Service {
 	private MumbleConnection mClient;
 	private MumbleProtocol mProtocol;
 
+	private Settings settings;
+	
 	private Thread mClientThread;
 	private Thread mRecordThread;
 
 	Notification mNotification;
-	Notification.Builder mNotificationBuilder;
+	NotificationCompat.Builder mNotificationBuilder;
 
 	private final LocalBinder mBinder = new LocalBinder();
 	final Handler handler = new Handler();
@@ -422,7 +422,7 @@ public class MumbleService extends Service {
 
 	private ServiceProtocolHost mProtocolHost;
 	private ServiceConnectionHost mConnectionHost;
-	private ServiceAudioOutputHost mAudioHost;
+	public ServiceAudioOutputHost mAudioHost;
 
 	/**
 	 * Gets the current mumble service (the last one spawned).
@@ -506,6 +506,8 @@ public class MumbleService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		settings = new Settings(this);
 
 		try {
 			mStartForeground = getClass().getMethod(
@@ -559,6 +561,13 @@ public class MumbleService extends Service {
 	public void sendUdpMessage(final byte[] buffer, final int length) {
 		mClient.sendUdpMessage(buffer, length, false);
 	}
+	
+	/**
+	 * @return the mAudioHost
+	 */
+	public ServiceAudioOutputHost getAudioHost() {
+		return mAudioHost;
+	}
 
 	@TargetApi(16)
 	public void setRecording(final boolean state) {
@@ -566,11 +575,15 @@ public class MumbleService extends Service {
 			mRecordThread == null && state) {
 			// start record
 			// TODO check initialized
-			mRecordThread = new Thread(new RecordThread(this), "record");
+			mRecordThread = new Thread(new RecordThread(this, settings.isVoiceActivity()), "record");
 			mRecordThread.start();
-			mAudioHost.setTalkState(
-				mProtocol.currentUser,
-				AudioOutputHost.STATE_TALKING);
+			
+			if(settings.isPushToTalk()) {
+				// Continuously talk if using PTT.
+				mAudioHost.setTalkState(
+						mProtocol.currentUser,
+						AudioOutputHost.STATE_TALKING);
+			}
 		} else if (mRecordThread != null && !state) {
 			// stop record
 			mRecordThread.interrupt();
@@ -580,15 +593,15 @@ public class MumbleService extends Service {
 				AudioOutputHost.STATE_PASSIVE);
 		}
 		
-		if(android.os.Build.VERSION.SDK_INT >= 16) {
+		//if(android.os.Build.VERSION.SDK_INT >= 16) {
 			//mNotificationBuilder.setTicker("Recording "+(state ? "ON" : "OFF"));
 			mNotificationBuilder.setSmallIcon(state ? R.drawable.microphone : R.drawable.microphone_muted);
 			mNotificationBuilder.setSubText("Recording is "+(state ? "ON" : "OFF")+".");
 			mNotification = mNotificationBuilder.build();
 			startForegroundCompat(1, mNotification);
-		} else {
+		//} else {
 			// i dunno, TODO implement for older SDK versions
-		}
+		//}
 	}
 
 	public void unregisterObserver(final IServiceObserver observer) {
@@ -710,41 +723,9 @@ public class MumbleService extends Service {
 			mNotification = null;
 		}
 	}
-	
+
 	void showNotification() {
-		if(android.os.Build.VERSION.SDK_INT >= 16) {
-			showJellybeanNotification();
-		} else {
-			showFallbackNotification();
-		}
-	}
-	
-	void showFallbackNotification() {
-		mNotification = new Notification(
-			R.drawable.icon,
-			"Mumble connected",
-			System.currentTimeMillis());
-
-		final Intent channelListIntent = new Intent(
-			MumbleService.this,
-			ChannelActivity.class);
-		channelListIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(
-			Intent.FLAG_ACTIVITY_NEW_TASK);
-		mNotification.setLatestEventInfo(
-			MumbleService.this,
-			"Plumble",
-			"Plumble is connected to a server",
-			PendingIntent.getActivity(
-				MumbleService.this,
-				0,
-				channelListIntent,
-				0));
-		startForegroundCompat(1, mNotification);
-	}
-
-	@TargetApi(16)
-	void showJellybeanNotification() {
-		Notification.Builder builder = new Notification.Builder(this);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setSmallIcon(R.drawable.microphone);
 		builder.setTicker("Plumble Connected");
 		builder.setContentTitle("Plumble");
@@ -752,10 +733,12 @@ public class MumbleService extends Service {
 		builder.setSubText("Recording is OFF.");
 		builder.setPriority(Notification.PRIORITY_HIGH);
 		
-		// Add notification triggers
-		Intent intent = new Intent(this, MumbleNotificationService.class);
-		intent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_TALK);
-		builder.addAction(R.drawable.microphone, "Toggle Recording", PendingIntent.getService(this, 0, intent, 0));
+		// Add notification triggers if PTT is enabled
+		if(settings.isPushToTalk()) {
+			Intent intent = new Intent(this, MumbleNotificationService.class);
+			intent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_TALK);
+			builder.addAction(R.drawable.microphone, "Toggle Recording", PendingIntent.getService(this, 0, intent, 0));
+		}
 		
 		Intent channelListIntent = new Intent(
 			MumbleService.this,

@@ -2,7 +2,9 @@
 <ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	android:paddingRight="10dp"
+	android:paddingLeft="10dp">
 	<LinearLayout
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
@@ -37,7 +39,7 @@
 			android:layout_width="fill_parent"
 			android:id="@+id/serverPortEdit"
 			android:inputType="number"
-			android:text="@string/defaultServerPort"></EditText>
+			android:hint="@string/defaultServerPort"></EditText>
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -52,16 +54,13 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/serverPassword"
+			android:visibility="gone"
 			android:text="@string/serverPassword"></TextView>
 		<EditText
 			android:layout_height="wrap_content"
 			android:id="@+id/serverPasswordEdit"
 			android:layout_width="fill_parent"
+			android:visibility="gone"
 			android:inputType="textPassword"></EditText>
-		<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/serverAdd"
-			android:text="@string/serverAdd"></Button>
 	</LinearLayout>
 </ScrollView>

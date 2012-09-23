@@ -14,6 +14,13 @@ public class Settings {
 	public static final String ARRAY_JITTER_NONE = "none";
 	public static final String ARRAY_JITTER_SPEEX = "speex";
 
+	public static final String PREF_METHOD = "audioInputMethod";
+	public static final String ARRAY_METHOD_VOICE = "voiceActivity";
+	public static final String ARRAY_METHOD_PTT = "ptt";
+	
+	public static final String PREF_THRESHOLD = "detectionThreshold";
+	public static final String DEFAULT_THRESHOLD = "1400";
+	
 	public static final String PREF_QUALITY = "quality";
 	private static final String DEFAULT_QUALITY = "60000";
 
@@ -32,9 +39,26 @@ public class Settings {
 			ARRAY_STREAM_MUSIC) ? AudioManager.STREAM_MUSIC
 			: AudioManager.STREAM_VOICE_CALL;
 	}
+	
+	public int getDetectionThreshold() {
+		try {
+			return Integer.parseInt(preferences.getString(PREF_THRESHOLD, DEFAULT_THRESHOLD));
+		} catch(NumberFormatException exception) {
+			exception.printStackTrace();
+			return Integer.parseInt(DEFAULT_THRESHOLD);
+		}
+	}
 
 	public boolean isJitterBuffer() {
 		return preferences.getString(PREF_JITTER, ARRAY_JITTER_NONE).equals(
 			ARRAY_JITTER_SPEEX);
+	}
+	
+	public boolean isVoiceActivity() {
+		return preferences.getString(PREF_METHOD, ARRAY_METHOD_VOICE).equals(ARRAY_METHOD_VOICE);
+	}
+	
+	public boolean isPushToTalk() {
+		return preferences.getString(PREF_METHOD, ARRAY_METHOD_VOICE).equals(ARRAY_METHOD_PTT);
 	}
 }

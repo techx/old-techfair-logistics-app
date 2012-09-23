@@ -23,4 +23,16 @@
 		<item>none</item>
 		<item>speex</item>
 	</string-array>
+	
+	<string-array
+	    name="audioInputNames">
+	    <item>Voice Activity</item>
+	    <item>Push to Talk</item>
+	</string-array>
+	
+	<string-array
+	    name="audioInputValues">
+	    <item>voiceActivity</item>
+	    <item>ptt</item>
+	</string-array>
 </resources>

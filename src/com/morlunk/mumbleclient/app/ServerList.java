@@ -174,12 +174,7 @@ public class ServerList extends ConnectedListActivity {
 	@Override
 	public final boolean onCreateOptionsMenu(final Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, MENU_ADD_SERVER, 0, "Add Server").setIcon(
-			android.R.drawable.ic_menu_add);
-		menu.add(0, MENU_PREFERENCES, 0, "Preferences").setIcon(
-			android.R.drawable.ic_menu_preferences);
-		menu.add(0, MENU_EXIT, 0, "Exit").setIcon(
-			android.R.drawable.ic_menu_close_clear_cancel);
+		getMenuInflater().inflate(R.menu.activity_server_list, menu);
 		return true;
 	}
 
@@ -188,16 +183,12 @@ public class ServerList extends ConnectedListActivity {
 		final int featureId,
 		final MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ADD_SERVER:
+		case R.id.menu_add_server_item:
 			addServer();
 			return true;
-		case MENU_PREFERENCES:
+		case R.id.menu_preferences:
 			final Intent prefs = new Intent(this, Preferences.class);
 			startActivity(prefs);
-			return true;
-		case MENU_EXIT:
-			finish();
-			System.exit(0);
 			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);

@@ -8,8 +8,10 @@ import com.morlunk.mumbleclient.jni.celtConstants;
 import com.morlunk.mumbleclient.service.MumbleProtocol;
 import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.PacketDataStream;
+import com.morlunk.mumbleclient.service.MumbleService.ServiceAudioOutputHost;
 
 
+import android.R.integer;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -22,12 +24,14 @@ import android.util.Log;
  *
  */
 public class RecordThread implements Runnable {
+	
 	private final int audioQuality;
 	private static int frameSize;
 	private static int recordingSampleRate;
 	private static final int TARGET_SAMPLE_RATE = MumbleProtocol.SAMPLE_RATE;
 	private final short[] buffer;
 	private int bufferSize;
+	private boolean voiceActivity = false;
 	private final long celtEncoder;
 	private final long celtMode;
 	private final int framesPerPacket = 6;
@@ -36,10 +40,21 @@ public class RecordThread implements Runnable {
 	private int seq;
 	private final long speexResamplerState;
 	private final MumbleService mService;
+	
+	private static final int DETECTION_DELAY = 400; // Wait 400ms after record
+	private int detectionThreshold = 1400;
+	private long lastDetection = 0;
+	private int talkState = AudioOutputHost.STATE_PASSIVE;
 
-	public RecordThread(final MumbleService service) {
+	public RecordThread(final MumbleService service, final boolean voiceActivity) {
 		mService = service;
 		audioQuality = new Settings(mService.getApplicationContext()).getAudioQuality();
+		this.voiceActivity = voiceActivity;
+		
+
+		Settings settings = new Settings(service);
+		// Get detection threshold
+		detectionThreshold = settings.getDetectionThreshold();
 
 		for (final int s : new int[] { 48000, 44100, 22050, 11025, 8000 }) {
 			bufferSize = AudioRecord.getMinBufferSize(
@@ -105,6 +120,7 @@ public class RecordThread implements Runnable {
 			}
 
 			ar.startRecording();
+			
 			while (running && !Thread.interrupted()) {
 				final int read = ar.read(buffer, 0, frameSize);
 
@@ -128,17 +144,33 @@ public class RecordThread implements Runnable {
 				} else {
 					out = buffer;
 				}
-
-				final int compressedSize = Math.min(
-					audioQuality / (100 * 8),
-					127);
+				
+				if(voiceActivity) {
+					long totalAmplitude = 0;
+					for(short s : buffer) {
+						totalAmplitude +=Math.abs(s);
+					}
+					totalAmplitude /= buffer.length;
+					
+					if(totalAmplitude >= detectionThreshold) {
+						lastDetection = System.currentTimeMillis();
+					}
+					
+					if(System.currentTimeMillis() - lastDetection <= DETECTION_DELAY) {
+						mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_TALKING);
+						talkState = AudioOutputHost.STATE_TALKING;
+					} else {
+						mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_PASSIVE);
+						talkState = AudioOutputHost.STATE_PASSIVE;
+					}
+				}
+				
+				final int compressedSize = Math.min(audioQuality / (100 * 8),
+						127);
 				final byte[] compressed = new byte[compressedSize];
 				synchronized (Native.class) {
-					Native.celt_encode(
-						celtEncoder,
-						out,
-						compressed,
-						compressedSize);
+					Native.celt_encode(celtEncoder, out, compressed,
+							compressedSize);
 				}
 				outputQueue.add(compressed);
 
@@ -171,8 +203,10 @@ public class RecordThread implements Runnable {
 						pds.append(head);
 						pds.append(tmp);
 					}
-
-					mService.sendUdpMessage(outputBuffer, pds.size());
+					
+					if(talkState == AudioOutputHost.STATE_TALKING || !voiceActivity) {
+						mService.sendUdpMessage(outputBuffer, pds.size());
+					}
 				}
 			}
 		} finally {
@@ -189,5 +223,5 @@ public class RecordThread implements Runnable {
 		}
 		Native.celt_encoder_destroy(celtEncoder);
 		Native.celt_mode_destroy(celtMode);
-	}
+	}	
 }

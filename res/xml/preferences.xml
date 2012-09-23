@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="Audio Input">
+		<ListPreference android:entries="@array/audioInputNames" android:entryValues="@array/audioInputValues" android:key="audioInputMethod" android:summary="The way audio is sent to the server." android:title="Input Method" android:defaultValue="voiceActivity"/>
+		<EditTextPreference android:key="detectionThreshold" android:title="Detection Threshold" android:summary="The minimum amplitude required for voice to be detected (only applicable for voice activity)." android:defaultValue="1400"/>
+	</PreferenceCategory>
 	<PreferenceCategory
-		android:title="Audio">
+		android:title="Advanced Audio">
 		<ListPreference
 			android:title="Audio Stream"
 			android:summary="Affects the primary audio output device and the volume control."
@@ -23,4 +27,5 @@
 			android:key="quality"
 			android:inputType="number" />
 	</PreferenceCategory>
+	
 </PreferenceScreen>
