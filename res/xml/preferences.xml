@@ -5,7 +5,9 @@
 		<ListPreference android:entries="@array/audioInputNames" android:entryValues="@array/audioInputValues" android:key="audioInputMethod" android:summary="The way audio is sent to the server." android:title="Input Method" android:defaultValue="voiceActivity"/>
 		<EditTextPreference android:key="detectionThreshold" android:title="Detection Threshold" android:summary="The minimum amplitude required for voice to be detected (only applicable for voice activity)." android:defaultValue="1400"/>
 	</PreferenceCategory>
-	<PreferenceCategory
+	<PreferenceCategory android:title="Appearance">
+		<ListPreference android:entries="@array/themeNames" android:entryValues="@array/themeValues" android:key="theme" android:summary="The theme of the app's channel view." android:title="Theme" android:defaultValue="lightDark"/>
+	</PreferenceCategory><PreferenceCategory
 		android:title="Advanced Audio">
 		<ListPreference
 			android:title="Audio Stream"
@@ -27,5 +29,6 @@
 			android:key="quality"
 			android:inputType="number" />
 	</PreferenceCategory>
+	
 	
 </PreferenceScreen>

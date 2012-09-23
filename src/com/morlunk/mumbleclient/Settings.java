@@ -22,7 +22,12 @@ public class Settings {
 	public static final String DEFAULT_THRESHOLD = "1400";
 	
 	public static final String PREF_QUALITY = "quality";
-	private static final String DEFAULT_QUALITY = "60000";
+	public static final String DEFAULT_QUALITY = "60000";
+	
+	public static final String PREF_THEME = "theme";
+	public static final String ARRAY_THEME_LIGHTDARK = "lightDark";
+	public static final String ARRAY_THEME_DARK = "dark";
+	
 
 	private final SharedPreferences preferences;
 
@@ -47,6 +52,10 @@ public class Settings {
 			exception.printStackTrace();
 			return Integer.parseInt(DEFAULT_THRESHOLD);
 		}
+	}
+	
+	public String getTheme() {
+		return preferences.getString(PREF_THEME, ARRAY_THEME_LIGHTDARK);
 	}
 
 	public boolean isJitterBuffer() {

@@ -91,11 +91,20 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        setContentView(R.layout.activity_channel);
-
 		settings = new Settings(this);
+		
+		// Use theme from settings
+		int theme = 0;
+		if(settings.getTheme().equals(Settings.ARRAY_THEME_LIGHTDARK)) {
+			theme = android.R.style.Theme_Holo_Light_DarkActionBar;
+		} else if(settings.getTheme().equals(Settings.ARRAY_THEME_DARK)) {
+			theme = android.R.style.Theme_Holo;
+		}
+		setTheme(theme);
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_channel);
+		
 		setVolumeControlStream(settings.getAudioStream());
 		
         // Create the adapter that will return a fragment for each of the three primary sections
@@ -224,7 +233,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			final AlertDialog.Builder b = new AlertDialog.Builder(this);
-			b.setIcon(android.R.drawable.ic_dialog_alert);
 			b.setTitle("Disconnect");
 			b.setMessage("Are you sure you want to disconnect from Mumble?");
 			b.setPositiveButton(android.R.string.yes, onDisconnectConfirm);

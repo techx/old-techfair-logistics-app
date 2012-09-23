@@ -2,20 +2,17 @@ package com.morlunk.mumbleclient.service.audio;
 
 import java.util.LinkedList;
 
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
+import android.util.Log;
+
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.jni.Native;
 import com.morlunk.mumbleclient.jni.celtConstants;
 import com.morlunk.mumbleclient.service.MumbleProtocol;
 import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.PacketDataStream;
-import com.morlunk.mumbleclient.service.MumbleService.ServiceAudioOutputHost;
-
-
-import android.R.integer;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
-import android.util.Log;
 
 /**
  * Thread responsible for recording voice and sending it over to server.

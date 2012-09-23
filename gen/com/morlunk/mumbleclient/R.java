@@ -15,6 +15,8 @@ public final class R {
         public static final int bufferValues=0x7f060003;
         public static final int streamNames=0x7f060000;
         public static final int streamValues=0x7f060001;
+        public static final int themeNames=0x7f060006;
+        public static final int themeValues=0x7f060007;
     }
     public static final class attr {
     }
@@ -29,13 +31,14 @@ public final class R {
         public static final int disconnect=0x7f020002;
         public static final int edit=0x7f020003;
         public static final int ic_action_search=0x7f020004;
-        public static final int icon=0x7f020005;
-        public static final int microphone=0x7f020006;
-        public static final int microphone_muted=0x7f020007;
-        public static final int muted=0x7f020008;
-        public static final int save=0x7f020009;
-        public static final int talking_off=0x7f02000a;
-        public static final int talking_on=0x7f02000b;
+        public static final int microphone=0x7f020005;
+        public static final int microphone_muted=0x7f020006;
+        public static final int muted=0x7f020007;
+        public static final int plumble=0x7f020008;
+        public static final int plumble_vector=0x7f020009;
+        public static final int save=0x7f02000a;
+        public static final int talking_off=0x7f02000b;
+        public static final int talking_on=0x7f02000c;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f09000a;
