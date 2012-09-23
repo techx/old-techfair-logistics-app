@@ -19,7 +19,7 @@ public class Settings {
 	public static final String ARRAY_METHOD_PTT = "ptt";
 	
 	public static final String PREF_THRESHOLD = "detectionThreshold";
-	public static final String DEFAULT_THRESHOLD = "1400";
+	public static final Integer DEFAULT_THRESHOLD = 1400;
 	
 	public static final String PREF_QUALITY = "quality";
 	public static final String DEFAULT_QUALITY = "60000";
@@ -46,12 +46,7 @@ public class Settings {
 	}
 	
 	public int getDetectionThreshold() {
-		try {
-			return Integer.parseInt(preferences.getString(PREF_THRESHOLD, DEFAULT_THRESHOLD));
-		} catch(NumberFormatException exception) {
-			exception.printStackTrace();
-			return Integer.parseInt(DEFAULT_THRESHOLD);
-		}
+		return preferences.getInt(PREF_THRESHOLD, DEFAULT_THRESHOLD);
 	}
 	
 	public String getTheme() {

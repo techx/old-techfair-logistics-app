@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="Audio Input">
 		<ListPreference android:entries="@array/audioInputNames" android:entryValues="@array/audioInputValues" android:key="audioInputMethod" android:summary="The way audio is sent to the server." android:title="Input Method" android:defaultValue="voiceActivity"/>
-		<EditTextPreference android:key="detectionThreshold" android:title="Detection Threshold" android:summary="The minimum amplitude required for voice to be detected (only applicable for voice activity)." android:defaultValue="1400"/>
+		<com.morlunk.mumbleclient.preference.SeekBarDialogPreference android:key="detectionThreshold" android:title="Detection Threshold" android:summary="The minimum amplitude required for voice to be detected (only applicable for voice activity)." android:defaultValue="14" android:max="28" multiplier="100"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Appearance">
 		<ListPreference android:entries="@array/themeNames" android:entryValues="@array/themeValues" android:key="theme" android:summary="The theme of the app's channel view." android:title="Theme" android:defaultValue="lightDark"/>
