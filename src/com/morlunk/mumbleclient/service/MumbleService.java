@@ -23,10 +23,12 @@ import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.protobuf.Message.Builder;
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.app.ChannelActivity;
+import com.morlunk.mumbleclient.service.MumbleProtocol.MessageType;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;
 import com.morlunk.mumbleclient.service.audio.RecordThread;
 import com.morlunk.mumbleclient.service.model.Channel;
@@ -560,6 +562,10 @@ public class MumbleService extends Service {
 
 	public void sendUdpMessage(final byte[] buffer, final int length) {
 		mClient.sendUdpMessage(buffer, length, false);
+	}
+	
+	public void sendTcpMessage(MessageType t, Builder b) {
+		mClient.sendTcpMessage(t, b);
 	}
 	
 	/**

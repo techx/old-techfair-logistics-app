@@ -66,7 +66,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	private ChannelSpinnerAdapter channelAdapter;
 
 	private ProgressDialog mProgressDialog;
-	private AlertDialog mDisconnectDialog;
 	
 	// Fragments
 	private ChannelListFragment listFragment;
@@ -237,7 +236,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			b.setMessage("Are you sure you want to disconnect from Mumble?");
 			b.setPositiveButton(android.R.string.yes, onDisconnectConfirm);
 			b.setNegativeButton(android.R.string.no, null);
-			mDisconnectDialog = b.show();
+			b.show();
 
 			return true;
 		}

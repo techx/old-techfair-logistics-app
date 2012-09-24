@@ -54,13 +54,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/serverPassword"
-			android:visibility="gone"
 			android:text="@string/serverPassword"></TextView>
 		<EditText
 			android:layout_height="wrap_content"
 			android:id="@+id/serverPasswordEdit"
 			android:layout_width="fill_parent"
-			android:visibility="gone"
 			android:inputType="textPassword"></EditText>
 	</LinearLayout>
 </ScrollView>

@@ -3,7 +3,6 @@ package com.morlunk.mumbleclient.app;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
@@ -20,22 +19,9 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.morlunk.mumbleclient.R;
-import com.morlunk.mumbleclient.service.BaseServiceObserver;
 import com.morlunk.mumbleclient.service.model.Message;
 
 public class ChannelChatFragment extends Fragment {
-
-	private class ChatServiceObserver extends BaseServiceObserver {
-		@Override
-		public void onMessageReceived(final Message msg) throws RemoteException {
-			addMessage(msg);
-		}
-
-		@Override
-		public void onMessageSent(final Message msg) throws RemoteException {
-			addMessage(msg);
-		}
-	}
 
 	private ChannelProvider channelProvider;
 	private TextView chatText;
@@ -105,14 +91,6 @@ public class ChannelChatFragment extends Fragment {
 		view.findViewById(R.id.send_button).setOnClickListener(sendOnClickEvent);
 		updateText();
 		return view;
-	}
-	
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 
 	void addMessage(final Message msg) {

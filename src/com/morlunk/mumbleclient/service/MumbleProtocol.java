@@ -14,8 +14,6 @@ import net.sf.mumble.MumbleProto.ServerSync;
 import net.sf.mumble.MumbleProto.TextMessage;
 import net.sf.mumble.MumbleProto.UserRemove;
 import net.sf.mumble.MumbleProto.UserState;
-
-
 import android.content.Context;
 import android.util.Log;
 
@@ -135,10 +133,7 @@ public class MumbleProtocol {
 			break;
 		case Reject:
 			final Reject reject = Reject.parseFrom(buffer);
-			final String errorString = String.format(
-				"Connection rejected: %s",
-				reject.getReason());
-			host.setError(errorString);
+			host.setError(reject.getReason());
 			Log.e(Globals.LOG_TAG, String.format(
 				"Received Reject message: %s",
 				reject.getReason()));
@@ -242,6 +237,14 @@ public class MumbleProtocol {
 			if (us.hasName()) {
 				user.name = us.getName();
 			}
+			
+			if(us.hasCommentHash()) {
+				user.commentHash = us.getCommentHash();
+			}
+			
+			if(us.hasComment()) {
+				user.comment = us.getComment();
+			}
 
 			if (added || us.hasChannelId()) {
 				user.setChannel(channels.get(us.getChannelId()));
@@ -323,6 +326,10 @@ public class MumbleProtocol {
 				nonceBuilder.setClientNonce(ByteString.copyFrom(conn.cryptState.getClientNonce()));
 				conn.sendTcpMessage(MessageType.CryptSetup, nonceBuilder);
 			}
+			break;
+		case RequestBlob:
+			Log.i("Blab", "Got request blob "+new String(buffer));
+			// TODO display comment blob
 			break;
 		default:
 			Log.w(Globals.LOG_TAG, "unhandled message type " + t);

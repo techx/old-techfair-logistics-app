@@ -1,11 +1,13 @@
 package com.morlunk.mumbleclient.app;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
 import com.morlunk.mumbleclient.service.IServiceObserver;
@@ -107,9 +109,27 @@ public class ConnectedActivity extends FragmentActivity {
 	protected void onDisconnected() {
 		final String error = mService.getError();
 		if (error != null) {
-			Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+			alertBuilder.setTitle("Connection Refused");
+			
+			alertBuilder.setPositiveButton("Ok", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			});
+			alertBuilder.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					finish();
+				}
+			});
+			
+			alertBuilder.setMessage(error);
+			alertBuilder.show();
+		} else {
+			finish();
 		}
-		finish();
 	}
 
 	@Override

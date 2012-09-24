@@ -475,7 +475,7 @@ public class MumbleConnection implements Runnable {
 
 		final Version.Builder v = Version.newBuilder();
 		v.setVersion(Globals.PROTOCOL_VERSION);
-		v.setRelease("MumbleAndroid 0.0.1-dev");
+		v.setRelease("Plumble 1.0.");
 
 		final Authenticate.Builder a = Authenticate.newBuilder();
 		a.setUsername(username);
@@ -502,10 +502,11 @@ public class MumbleConnection implements Runnable {
 				stateLock.wait();
 			}
 
+			// Causes error messages to not be displayed. WAT.
 			// Report error if we died without being in a disconnecting state.
-			if (!disconnecting) {
-				reportError("Connection lost", null);
-			}
+			//if (!disconnecting) {
+			//	reportError("Connection lost", null);
+			//}
 
 			if (!disconnecting) {
 				disconnecting = true;

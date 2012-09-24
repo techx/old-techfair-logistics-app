@@ -4,6 +4,8 @@ import junit.framework.Assert;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.protobuf.ByteString;
+
 public class User implements Parcelable {
 	public static final Parcelable.Creator<User> CREATOR = new Creator<User>() {
 		@Override
@@ -28,6 +30,8 @@ public class User implements Parcelable {
 
 	public int session;
 	public String name;
+	public String comment;
+	public ByteString commentHash;
 	public float averageAvailable;
 	public int talkingState;
 	public int userState;
@@ -93,6 +97,8 @@ public class User implements Parcelable {
 
 		dest.writeInt(session);
 		dest.writeString(name);
+		dest.writeString(comment);
+		dest.writeString(commentHash.toStringUtf8());
 		dest.writeFloat(averageAvailable);
 		dest.writeInt(talkingState);
 		dest.writeBooleanArray(new boolean[] { isCurrent, muted, deafened });
@@ -104,6 +110,8 @@ public class User implements Parcelable {
 
 		session = in.readInt();
 		name = in.readString();
+		comment = in.readString();
+		commentHash = ByteString.copyFromUtf8(in.readString());
 		averageAvailable = in.readFloat();
 		talkingState = in.readInt();
 		final boolean[] boolArr = new boolean[3];

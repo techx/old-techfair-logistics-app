@@ -1,5 +1,8 @@
 package com.morlunk.mumbleclient.app;
 
+import java.io.DataOutputStream;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,16 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.mumble.MumbleProto;
+import net.sf.mumble.MumbleProto.RequestBlob;
+import net.sf.mumble.MumbleProto.RequestBlob.Builder;
+
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.morlunk.mumbleclient.R;
+import com.morlunk.mumbleclient.service.MumbleService;
+import com.morlunk.mumbleclient.service.MumbleProtocol.MessageType;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;
 import com.morlunk.mumbleclient.service.model.User;
 
@@ -233,7 +245,8 @@ public class UserListAdapter extends BaseAdapter {
 
 		final TextView name = (TextView) view.findViewById(R.id.userRowName);
 		final ImageView state = (ImageView) view.findViewById(R.id.userRowState);
-
+		final ImageButton comment = (ImageButton) view.findViewById(R.id.commentButton);
+		
 		name.setText(user.name);
 
 		switch (user.userState) {
@@ -250,7 +263,41 @@ public class UserListAdapter extends BaseAdapter {
 				state.setImageResource(R.drawable.talking_off);
 			}
 		}
+		
+		comment.setVisibility(user.comment != null || user.commentHash != null ? View.VISIBLE : View.INVISIBLE);
+		comment.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				builder.setTitle("Comment");
+				builder.setPositiveButton("Close", null);
+				
+				if(user.comment != null) {
+					builder.setMessage(user.comment);
+				} else if(user.commentHash != null) {
+					builder.setMessage("Long comments are not yet implemented");
+					// Retrieve comment from blob
+					// TODO build into next release
+					/*
+					final RequestBlob.Builder blobBuilder = RequestBlob.newBuilder();
+					
+					ByteBuffer bb = ByteBuffer.wrap(user.commentHash.toByteArray());
+					blobBuilder.addSessionComment(bb.getInt());
 
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							MumbleService.getCurrentService().sendTcpMessage(MessageType.RequestBlob, blobBuilder);
+						}
+					});
+				*/
+				}
+				builder.show();
+			}
+		});
+		
 		view.invalidate();
 	}
 

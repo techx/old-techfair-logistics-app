@@ -27,18 +27,19 @@ public final class R {
     }
     public static final class drawable {
         public static final int add=0x7f020000;
-        public static final int deafened=0x7f020001;
-        public static final int disconnect=0x7f020002;
-        public static final int edit=0x7f020003;
-        public static final int ic_action_search=0x7f020004;
-        public static final int microphone=0x7f020005;
-        public static final int microphone_muted=0x7f020006;
-        public static final int muted=0x7f020007;
-        public static final int plumble=0x7f020008;
-        public static final int plumble_vector=0x7f020009;
-        public static final int save=0x7f02000a;
-        public static final int talking_off=0x7f02000b;
-        public static final int talking_on=0x7f02000c;
+        public static final int comment=0x7f020001;
+        public static final int deafened=0x7f020002;
+        public static final int disconnect=0x7f020003;
+        public static final int edit=0x7f020004;
+        public static final int ic_action_search=0x7f020005;
+        public static final int microphone=0x7f020006;
+        public static final int microphone_muted=0x7f020007;
+        public static final int muted=0x7f020008;
+        public static final int plumble=0x7f020009;
+        public static final int plumble_vector=0x7f02000a;
+        public static final int save=0x7f02000b;
+        public static final int talking_off=0x7f02000c;
+        public static final int talking_on=0x7f02000d;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f09000a;
@@ -46,6 +47,7 @@ public final class R {
         public static final int channelUsers=0x7f090004;
         public static final int chatText=0x7f090009;
         public static final int chatTextEdit=0x7f09000b;
+        public static final int commentButton=0x7f090008;
         public static final int connectionViewRoot=0x7f090002;
         public static final int menu_add_server_item=0x7f09001c;
         public static final int menu_chat_item=0x7f09001e;
@@ -69,9 +71,8 @@ public final class R {
         public static final int server_row_name=0x7f090017;
         public static final int server_row_user=0x7f090018;
         public static final int tabstrip=0x7f090001;
-        public static final int userRowName=0x7f090008;
+        public static final int userRowName=0x7f090007;
         public static final int userRowState=0x7f090006;
-        public static final int userRowStatus=0x7f090007;
     }
     public static final class layout {
         public static final int activity_channel=0x7f030000;

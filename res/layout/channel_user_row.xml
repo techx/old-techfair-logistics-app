@@ -7,12 +7,12 @@
 	android:padding="10dp">
 
 	<ImageView
-		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
+	    android:layout_centerVertical="true"
 		android:id="@+id/userRowState"
 		android:src="@drawable/plumble" />
 	<TextView
-		android:layout_toLeftOf="@+id/userRowStatus"
 		android:layout_height="wrap_content"
 		android:text="[Name]"
 		android:id="@+id/userRowName"
@@ -23,7 +23,8 @@
 		android:textSize="18sp"
 		android:paddingLeft="10dp"
 		android:layout_centerVertical="true"
-		android:layout_toRightOf="@+id/userRowState" />
+		android:layout_toRightOf="@+id/userRowState" 
+		android:layout_toLeftOf="@+id/commentButton"/>
 	<!--
 		singleLine is deprecated but it is the only way to get ellipsize work
 		it seems. 'inputType text, maxLines 1' didn't work. It's a known issue
@@ -32,4 +33,16 @@
 		happens first, they remove support for singleLine or they manage to
 		reproduce the error. :p
 	-->
+
+	<ImageButton
+	    android:id="@+id/commentButton"
+	    android:layout_width="32dp"
+	    android:layout_height="32dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:background="@null"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/comment"
+	    android:visibility="invisible"/>
+
 </RelativeLayout>

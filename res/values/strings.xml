@@ -9,7 +9,7 @@
     <string name="noUsers">no users</string>
     <string name="serverAdd">Add Server</string>
     <string name="serverChange">Change Server</string>
-    <string name="serverPassword">Password</string>
+    <string name="serverPassword">Password (Optional)</string>
     <string name="serverUsername">Username</string>
     <string name="serverPort">Port</string>
     <string name="serverHost">Address</string>
