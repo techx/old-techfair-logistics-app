@@ -187,7 +187,9 @@ public class AudioOutput implements Runnable {
 			while (i.hasNext()) {
 				final AudioUser user = i.next();
 				if (user.hasFrame()) {
-					mix.add(user);
+					if(!user.getUser().localMuted) {
+						mix.add(user);
+					}
 				} else {
 					i.remove();
 					host.setTalkState(

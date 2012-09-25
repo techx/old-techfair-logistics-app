@@ -3,9 +3,14 @@ package com.morlunk.mumbleclient.app;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -126,6 +131,30 @@ public class ChannelListFragment extends Fragment {
 
 		usersAdapter = new UserListAdapter(getActivity(), channelUsersList, null);
 		channelUsersList.setAdapter(usersAdapter);
+		registerForContextMenu(channelUsersList);
 		channelUsersList.setEmptyView(noUsersText);
 	}
+	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getActivity().getMenuInflater().inflate(R.menu.channel_list_context, menu);
+	}
+	
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		User user = (User) usersAdapter.getItem(info.position);
+		
+		switch (item.getItemId()) {
+		case R.id.menu_local_mute_item:
+			user.localMuted = !user.localMuted;
+			usersAdapter.notifyDataSetChanged();
+			return true;
+		}
+		return false;
+	};
 }

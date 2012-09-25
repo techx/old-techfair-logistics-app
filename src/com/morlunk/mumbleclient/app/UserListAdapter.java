@@ -1,8 +1,5 @@
 package com.morlunk.mumbleclient.app;
 
-import java.io.DataOutputStream;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,16 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.mumble.MumbleProto;
 import net.sf.mumble.MumbleProto.RequestBlob;
-import net.sf.mumble.MumbleProto.RequestBlob.Builder;
-
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,8 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.morlunk.mumbleclient.R;
-import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.MumbleProtocol.MessageType;
+import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;
 import com.morlunk.mumbleclient.service.model.User;
 
@@ -245,7 +241,8 @@ public class UserListAdapter extends BaseAdapter {
 
 		final TextView name = (TextView) view.findViewById(R.id.userRowName);
 		final ImageView state = (ImageView) view.findViewById(R.id.userRowState);
-		final ImageButton comment = (ImageButton) view.findViewById(R.id.commentButton);
+		final ImageView comment = (ImageView) view.findViewById(R.id.commentState);
+		final ImageView localMute = (ImageView) view.findViewById(R.id.localMuteState);
 		
 		name.setText(user.name);
 
@@ -264,7 +261,9 @@ public class UserListAdapter extends BaseAdapter {
 			}
 		}
 		
-		comment.setVisibility(user.comment != null || user.commentHash != null ? View.VISIBLE : View.INVISIBLE);
+		localMute.setVisibility(user.localMuted ? View.VISIBLE : View.GONE);
+		
+		comment.setVisibility(user.comment != null || user.commentHash != null ? View.VISIBLE : View.GONE);
 		comment.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -272,29 +271,39 @@ public class UserListAdapter extends BaseAdapter {
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				builder.setTitle("Comment");
 				builder.setPositiveButton("Close", null);
+				final WebView webView = new WebView(context);
+				webView.loadDataWithBaseURL("", "<center>Retrieving...</center>", "text/html", "utf-8", "");
+				builder.setView(webView);
+				
+				final AlertDialog dialog = builder.show();
 				
 				if(user.comment != null) {
-					builder.setMessage(user.comment);
+					webView.loadDataWithBaseURL("", user.comment, "text/html", "utf-8", "");
 				} else if(user.commentHash != null) {
-					builder.setMessage("Long comments are not yet implemented");
 					// Retrieve comment from blob
-					// TODO build into next release
-					/*
 					final RequestBlob.Builder blobBuilder = RequestBlob.newBuilder();
+					blobBuilder.addSessionComment(user.session);
 					
-					ByteBuffer bb = ByteBuffer.wrap(user.commentHash.toByteArray());
-					blobBuilder.addSessionComment(bb.getInt());
-
-					new Thread(new Runnable() {
-						
+					new AsyncTask<Void, Void, Void>() {
 						@Override
-						public void run() {
+						protected Void doInBackground(Void... params) {
 							MumbleService.getCurrentService().sendTcpMessage(MessageType.RequestBlob, blobBuilder);
+							// TODO fix. This is messy, we're polling until we get a comment response.
+							while(user.comment == null && dialog.isShowing()) {
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							return null;
 						}
-					});
-				*/
+						
+						protected void onPostExecute(Void result) {
+							webView.loadDataWithBaseURL("", user.comment, "text/html", "utf-8", "");
+						};
+					}.execute();
 				}
-				builder.show();
 			}
 		});
 		

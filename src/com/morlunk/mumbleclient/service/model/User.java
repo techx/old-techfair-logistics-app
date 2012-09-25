@@ -39,6 +39,8 @@ public class User implements Parcelable {
 
 	public boolean muted;
 	public boolean deafened;
+	
+	public boolean localMuted = false;
 
 	private Channel channel;
 
@@ -97,6 +99,7 @@ public class User implements Parcelable {
 
 		dest.writeInt(session);
 		dest.writeString(name);
+		dest.writeInt(localMuted ? 1 : 0);
 		dest.writeString(comment);
 		dest.writeString(commentHash.toStringUtf8());
 		dest.writeFloat(averageAvailable);
@@ -110,6 +113,7 @@ public class User implements Parcelable {
 
 		session = in.readInt();
 		name = in.readString();
+		localMuted = in.readInt() == 1;
 		comment = in.readString();
 		commentHash = ByteString.copyFromUtf8(in.readString());
 		averageAvailable = in.readFloat();
