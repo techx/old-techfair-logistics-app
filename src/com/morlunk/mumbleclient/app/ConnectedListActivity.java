@@ -1,11 +1,11 @@
 package com.morlunk.mumbleclient.app;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
 import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.MumbleService;
@@ -18,7 +18,7 @@ import com.morlunk.mumbleclient.service.MumbleService;
  * @author Rantanen
  *
  */
-public class ConnectedListActivity extends ListActivity {
+public class ConnectedListActivity extends SherlockListActivity {
 	private final Host logicHost = new Host() {
 		@Override
 		public boolean bindService(

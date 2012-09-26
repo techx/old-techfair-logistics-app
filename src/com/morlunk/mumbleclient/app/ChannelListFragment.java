@@ -14,6 +14,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.service.model.User;
 
@@ -57,7 +58,7 @@ import com.morlunk.mumbleclient.service.model.User;
  * @author pcgod, Rantanen
  *
  */
-public class ChannelListFragment extends Fragment {	
+public class ChannelListFragment extends SherlockFragment {	
 	
 	/**
 	 * The parent activity MUST implement ChannelProvider. An exception will be thrown otherwise.

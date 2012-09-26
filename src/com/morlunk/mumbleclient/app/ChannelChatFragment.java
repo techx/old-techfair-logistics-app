@@ -3,7 +3,6 @@ package com.morlunk.mumbleclient.app;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
@@ -18,10 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.service.model.Message;
 
-public class ChannelChatFragment extends Fragment {
+public class ChannelChatFragment extends SherlockFragment {
 
 	private ChannelProvider channelProvider;
 	private TextView chatText;

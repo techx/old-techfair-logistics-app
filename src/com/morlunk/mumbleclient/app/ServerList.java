@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -124,9 +124,12 @@ public class ServerList extends ConnectedListActivity {
 	private static final String STATE_WAIT_CONNECTION = "org.pcgod.mumbleclient.ServerList.WAIT_CONNECTION";
 
 	private ServerServiceObserver mServiceObserver;
-
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
 	@Override
-	public final boolean onContextItemSelected(final MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 		case MENU_CONNECT_SERVER:
@@ -174,10 +177,10 @@ public class ServerList extends ConnectedListActivity {
 	@Override
 	public final boolean onCreateOptionsMenu(final Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.activity_server_list, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_server_list, menu);
 		return true;
 	}
-
+	
 	@Override
 	public final boolean onMenuItemSelected(
 		final int featureId,

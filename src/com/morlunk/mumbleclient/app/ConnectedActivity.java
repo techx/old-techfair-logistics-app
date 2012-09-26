@@ -7,8 +7,8 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.support.v4.app.FragmentActivity;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
 import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.MumbleService;
@@ -21,7 +21,7 @@ import com.morlunk.mumbleclient.service.MumbleService;
  * @author Rantanen
  *
  */
-public class ConnectedActivity extends FragmentActivity {
+public class ConnectedActivity extends SherlockFragmentActivity {
 	private final Host logicHost = new Host() {
 		@Override
 		public boolean bindService(

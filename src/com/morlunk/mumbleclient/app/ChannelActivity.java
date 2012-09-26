@@ -2,8 +2,6 @@ package com.morlunk.mumbleclient.app;
 
 import java.util.List;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -12,18 +10,20 @@ import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -95,9 +95,9 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		// Use theme from settings
 		int theme = 0;
 		if(settings.getTheme().equals(Settings.ARRAY_THEME_LIGHTDARK)) {
-			theme = android.R.style.Theme_Holo_Light_DarkActionBar;
+			theme = R.style.Theme_Sherlock_Light_DarkActionBar;
 		} else if(settings.getTheme().equals(Settings.ARRAY_THEME_DARK)) {
-			theme = android.R.style.Theme_Holo;
+			theme = R.style.Theme_Sherlock;
 		}
 		setTheme(theme);
 
@@ -111,7 +111,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         
         if(savedInstanceState != null) {
@@ -194,7 +194,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_channel, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_channel, menu);
         
         // Store recording icon to adjust for recording changes
         recordItem = menu.findItem(R.id.menu_talk_item);
@@ -270,7 +270,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		
 		List<Channel> channelList = mService.getChannelList();
 		channelAdapter = new ChannelSpinnerAdapter(channelList);
-		getActionBar().setListNavigationCallbacks(channelAdapter, new OnNavigationListener() {
+		getSupportActionBar().setListNavigationCallbacks(channelAdapter, new OnNavigationListener() {
 			@Override
 			public boolean onNavigationItemSelected(final int itemPosition, long itemId) {
 				new AsyncTask<Channel, Void, Void>() {
@@ -306,7 +306,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			// Re-select visible channel. Necessary after a rotation is
 			// performed or the app is suspended.
 			if (channelList.contains(visibleChannel)) {
-				getActionBar().setSelectedNavigationItem(
+				getSupportActionBar().setSelectedNavigationItem(
 						channelList.indexOf(visibleChannel));
 			}
 		}
@@ -395,12 +395,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
     	
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public SectionsPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
         }
 
         @Override
-        public Fragment getItem(int i) {
+        public SherlockFragment getItem(int i) {
         	switch (i) {
 			case 0:
 				return listFragment;
@@ -512,7 +512,7 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 		public View getView(int arg0, View arg1, ViewGroup arg2) {
 			View view = arg1;
 			if(arg1 == null) {
-				view = getLayoutInflater().inflate(android.R.layout.simple_spinner_dropdown_item, arg2, false);
+				view = getLayoutInflater().inflate(R.layout.sherlock_spinner_dropdown_item, arg2, false);
 			}
 			
 			TextView spinnerTitle = (TextView) view.findViewById(android.R.id.text1);

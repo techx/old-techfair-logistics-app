@@ -3,13 +3,14 @@ package com.morlunk.mumbleclient.app;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.morlunk.mumbleclient.R;
 
-public class ServerInfo extends Activity {
+public class ServerInfo extends SherlockActivity {
 	
 	public void save() {
 		final EditText nameEdit = (EditText) findViewById(R.id.serverNameEdit);
@@ -91,7 +92,7 @@ public class ServerInfo extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_server_info, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_server_info, menu);
 		return true;
 	}
 }
