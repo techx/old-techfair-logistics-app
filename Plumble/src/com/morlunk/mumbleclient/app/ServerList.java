@@ -332,7 +332,9 @@ public class ServerList extends ConnectedListActivity {
 	@Override
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.main);
+		
 		registerForContextMenu(getListView());
 
 		// FIXME: Volume settings
@@ -390,6 +392,19 @@ public class ServerList extends ConnectedListActivity {
 	protected void onPause() {
 		unregisterConnectionReceiver();
 		super.onPause();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.morlunk.mumbleclient.app.ConnectedListActivity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(mService != null && mService.getConnectionState() == MumbleService.CONNECTION_STATE_CONNECTED) {
+			// If already connected, just jump to channel list.
+			startActivity(new Intent(this, ChannelActivity.class));
+		}
 	}
 
 	@Override
