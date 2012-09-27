@@ -78,6 +78,17 @@ public class ChannelChatFragment extends SherlockFragment {
 	}
 	
 	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		// Clear chat text. It'll reload from the data source.
+		chatText.setText(null);
+	}
+	
+	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	@Override

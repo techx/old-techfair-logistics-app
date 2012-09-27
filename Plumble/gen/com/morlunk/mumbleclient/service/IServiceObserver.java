@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /media/Shared/Development/Projects/com.morlunk.mumbleclient/src/com/morlunk/mumbleclient/service/IServiceObserver.aidl
+ * Original file: /media/Shared/Development/Projects/com.morlunk.mumbleclient/Plumble/src/com/morlunk/mumbleclient/service/IServiceObserver.aidl
  */
 package com.morlunk.mumbleclient.service;
 public interface IServiceObserver extends android.os.IInterface
