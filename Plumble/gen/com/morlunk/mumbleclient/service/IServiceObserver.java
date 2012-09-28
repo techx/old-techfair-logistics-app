@@ -177,6 +177,17 @@ this.onConnectionStateChanged(_arg0);
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_onPermissionDenied:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _arg0;
+_arg0 = data.readString();
+int _arg1;
+_arg1 = data.readInt();
+this.onPermissionDenied(_arg0, _arg1);
+reply.writeNoException();
+return true;
+}
 }
 return super.onTransact(code, data, reply, flags);
 }
@@ -409,6 +420,22 @@ _reply.recycle();
 _data.recycle();
 }
 }
+public void onPermissionDenied(java.lang.String reason, int denyType) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(reason);
+_data.writeInt(denyType);
+mRemote.transact(Stub.TRANSACTION_onPermissionDenied, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 }
 static final int TRANSACTION_onChannelAdded = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
 static final int TRANSACTION_onChannelRemoved = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
@@ -421,6 +448,7 @@ static final int TRANSACTION_onUserUpdated = (android.os.IBinder.FIRST_CALL_TRAN
 static final int TRANSACTION_onMessageReceived = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
 static final int TRANSACTION_onMessageSent = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
 static final int TRANSACTION_onConnectionStateChanged = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
+static final int TRANSACTION_onPermissionDenied = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
 }
 public void onChannelAdded(com.morlunk.mumbleclient.service.model.Channel channel) throws android.os.RemoteException;
 public void onChannelRemoved(com.morlunk.mumbleclient.service.model.Channel channel) throws android.os.RemoteException;
@@ -436,4 +464,5 @@ public void onMessageSent(com.morlunk.mumbleclient.service.model.Message msg) th
 	 * Called when the connection state changes.
 	 */
 public void onConnectionStateChanged(int state) throws android.os.RemoteException;
+public void onPermissionDenied(java.lang.String reason, int denyType) throws android.os.RemoteException;
 }

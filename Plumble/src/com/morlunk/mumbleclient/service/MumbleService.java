@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.sf.mumble.MumbleProto.PermissionDenied;
+import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
+
 import junit.framework.Assert;
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -360,6 +363,25 @@ public class MumbleService extends Service {
 				protected void broadcast(final IServiceObserver observer)
 					throws RemoteException {
 					observer.onUserUpdated(user);
+				}
+			});
+		}
+
+		/* (non-Javadoc)
+		 * @see com.morlunk.mumbleclient.service.MumbleProtocolHost#permissionDenied(net.sf.mumble.MumbleProto.PermissionDenied.DenyType, net.sf.mumble.MumbleProto.PermissionDenied)
+		 */
+		@Override
+		public void permissionDenied(final String reason, final int denyType) {
+			handler.post(new ServiceProtocolMessage() {
+
+				@Override
+				public void process() {
+				}
+
+				@Override
+				protected void broadcast(final IServiceObserver observer)
+					throws RemoteException {
+					observer.onPermissionDenied(reason, denyType);
 				}
 			});
 		}

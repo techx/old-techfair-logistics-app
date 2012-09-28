@@ -57,4 +57,7 @@ public class BaseServiceObserver implements IServiceObserver {
 	@Override
 	public void onUserUpdated(final User user) throws RemoteException {
 	}
+	
+	public void onPermissionDenied(String reason, int denyType) throws RemoteException {
+	}
 }

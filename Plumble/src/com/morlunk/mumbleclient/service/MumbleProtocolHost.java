@@ -34,4 +34,6 @@ public interface MumbleProtocolHost {
 	public void userRemoved(int userId);
 
 	public void userUpdated(User user);
+	
+	public void permissionDenied(String reason, int denyType);
 }

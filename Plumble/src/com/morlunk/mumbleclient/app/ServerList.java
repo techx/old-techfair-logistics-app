@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.crittercism.app.Crittercism;
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -332,6 +333,8 @@ public class ServerList extends ConnectedListActivity {
 	@Override
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Crittercism.init(getApplicationContext(), "50650bc62cd95250d3000004");
 		
 		setContentView(R.layout.main);
 		

@@ -9,13 +9,17 @@ import net.sf.mumble.MumbleProto.ChannelRemove;
 import net.sf.mumble.MumbleProto.ChannelState;
 import net.sf.mumble.MumbleProto.CodecVersion;
 import net.sf.mumble.MumbleProto.CryptSetup;
+import net.sf.mumble.MumbleProto.PermissionDenied;
 import net.sf.mumble.MumbleProto.Reject;
 import net.sf.mumble.MumbleProto.ServerSync;
 import net.sf.mumble.MumbleProto.TextMessage;
 import net.sf.mumble.MumbleProto.UserRemove;
 import net.sf.mumble.MumbleProto.UserState;
+import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
 import com.morlunk.mumbleclient.Globals;
@@ -27,7 +31,8 @@ import com.morlunk.mumbleclient.service.model.User;
 
 public class MumbleProtocol {
 	public enum MessageType {
-		Version, UDPTunnel, Authenticate, Ping, Reject, ServerSync, ChannelRemove, ChannelState, UserRemove, UserState, BanList, TextMessage, PermissionDenied, ACL, QueryUsers, CryptSetup, ContextActionAdd, ContextAction, UserList, VoiceTarget, PermissionQuery, CodecVersion, UserStats, RequestBlob, ServerConfig
+		// TODO find out what 'Unknown' is. Without that extra enum value, servers will crash.
+		Version, UDPTunnel, Authenticate, Ping, Reject, ServerSync, ChannelRemove, ChannelState, UserRemove, UserState, BanList, TextMessage, PermissionDenied, ACL, QueryUsers, CryptSetup, ContextActionAdd, ContextAction, UserList, VoiceTarget, PermissionQuery, CodecVersion, UserStats, RequestBlob, SuggestConfig, Unknown
 	}
 
 	public static final int UDPMESSAGETYPE_UDPVOICECELTALPHA = 0;
@@ -55,7 +60,7 @@ public class MumbleProtocol {
 	 */
 	public static final int UDP_PING_TRESHOLD = 6000;
 
-	private static final MessageType[] MT_CONSTANTS = MessageType.class.getEnumConstants();
+	//private static final MessageType[] MT_CONSTANTS = MessageType.class.getEnumConstants();
 
 	public Map<Integer, Channel> channels = new HashMap<Integer, Channel>();
 	public Map<Integer, User> users = new HashMap<Integer, User>();
@@ -101,7 +106,7 @@ public class MumbleProtocol {
 			return;
 		}
 
-		final MessageType t = MT_CONSTANTS[type];
+		final MessageType t = MessageType.values()[type];
 
 		Channel channel;
 		User user;
@@ -287,6 +292,10 @@ public class MumbleProtocol {
 				host.currentChannelChanged();
 			}
 			break;
+		case PermissionDenied:
+			PermissionDenied denied = PermissionDenied.parseFrom(buffer);
+			host.permissionDenied(denied.getReason(), denied.getType().getNumber());
+			break;
 		case UserRemove:
 			final UserRemove ur = UserRemove.parseFrom(buffer);
 			user = findUser(ur.getSession());
@@ -326,10 +335,6 @@ public class MumbleProtocol {
 				nonceBuilder.setClientNonce(ByteString.copyFrom(conn.cryptState.getClientNonce()));
 				conn.sendTcpMessage(MessageType.CryptSetup, nonceBuilder);
 			}
-			break;
-		case RequestBlob:
-			Log.i("Blab", "Got request blob "+new String(buffer));
-			// TODO display comment blob
 			break;
 		default:
 			Log.w(Globals.LOG_TAG, "unhandled message type " + t);

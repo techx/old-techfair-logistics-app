@@ -2,6 +2,9 @@ package com.morlunk.mumbleclient.app;
 
 import java.util.List;
 
+import net.sf.mumble.MumbleProto.PermissionDenied;
+import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -274,7 +278,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			@Override
 			public boolean onNavigationItemSelected(final int itemPosition, long itemId) {
 				new AsyncTask<Channel, Void, Void>() {
-
+					
 					@Override
 					protected Void doInBackground(Channel... params) {
 						mService.joinChannel(params[0].id);
@@ -389,6 +393,14 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 				visibleChannel);
 	}
 	
+	/**
+	 * @param reason 
+	 * @param valueOf
+	 */
+	private void permissionDenied(String reason, DenyType denyType) {
+		Toast.makeText(getApplicationContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
+	}
+	
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
      * sections of the app.
@@ -458,6 +470,14 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		@Override
 		public void onUserUpdated(final User user) throws RemoteException {
 			refreshUser(user);
+		}
+		
+		/* (non-Javadoc)
+		 * @see com.morlunk.mumbleclient.service.BaseServiceObserver#onPermissionDenied(int)
+		 */
+		@Override
+		public void onPermissionDenied(String reason, int denyType) throws RemoteException {
+			permissionDenied(reason, DenyType.valueOf(denyType));
 		}
 
 		private void refreshUser(final User user) {

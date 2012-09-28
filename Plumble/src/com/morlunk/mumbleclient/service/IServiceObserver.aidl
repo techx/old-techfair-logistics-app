@@ -24,4 +24,6 @@ interface IServiceObserver {
 	 * Called when the connection state changes.
 	 */
 	void onConnectionStateChanged(int state);
+	
+	void onPermissionDenied(in String reason, in int denyType);
 }
