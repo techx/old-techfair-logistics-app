@@ -142,7 +142,7 @@ public class RecordThread implements Runnable {
 					out = buffer;
 				}
 				
-				if(voiceActivity) {
+				if(voiceActivity && mService.getCurrentUser() != null && !mService.getCurrentUser().muted) {
 					long totalAmplitude = 0;
 					for(short s : buffer) {
 						totalAmplitude +=Math.abs(s);
@@ -154,11 +154,15 @@ public class RecordThread implements Runnable {
 					}
 					
 					if(System.currentTimeMillis() - lastDetection <= DETECTION_DELAY) {
-						mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_TALKING);
-						talkState = AudioOutputHost.STATE_TALKING;
+						if(talkState != AudioOutputHost.STATE_TALKING) {
+							mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_TALKING);
+							talkState = AudioOutputHost.STATE_TALKING;
+						}
 					} else {
-						mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_PASSIVE);
-						talkState = AudioOutputHost.STATE_PASSIVE;
+						if(talkState != AudioOutputHost.STATE_PASSIVE) {
+							mService.getAudioHost().setTalkState(mService.getCurrentUser(), AudioOutputHost.STATE_PASSIVE);
+							talkState = AudioOutputHost.STATE_PASSIVE;
+						}
 					}
 				}
 				
