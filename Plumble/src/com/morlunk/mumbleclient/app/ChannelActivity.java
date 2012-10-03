@@ -19,9 +19,12 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -74,9 +77,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	// Fragments
 	private ChannelListFragment listFragment;
 	private ChannelChatFragment chatFragment;
-
-	// Menu items
-	private MenuItem recordItem;
 	
 	private Settings settings;
 	
@@ -117,6 +117,19 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        
+        // Set up PTT button.
+        if(settings.isPushToTalk()) {
+        	ToggleButton talkButton = (ToggleButton) findViewById(R.id.pushtotalk);
+        	talkButton.setVisibility(View.VISIBLE);
+        	talkButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					mService.setRecording(isChecked);
+				}
+			});
+        }
         
         if(savedInstanceState != null) {
         	final Channel channel = (Channel) savedInstanceState.getParcelable(SAVED_STATE_VISIBLE_CHANNEL);
@@ -190,25 +203,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     @Override
     protected void onResume() {
     	super.onResume();
-    	
-    	if(recordItem != null && mService != null) {
-    		recordItem.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
-    	}
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_channel, menu);
-        
-        // Store recording icon to adjust for recording changes
-        recordItem = menu.findItem(R.id.menu_talk_item);
-        
-        // If voice activity is enabled, disable push to talk item.
-		if(settings.isVoiceActivity()) {
-			recordItem.setVisible(false);
-			recordItem.setEnabled(false);
-		}
-        
+                
         return true;
     }
     
@@ -219,10 +219,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     public boolean onOptionsItemSelected(MenuItem item) {
     	
     	switch (item.getItemId()) {
-		case R.id.menu_talk_item:
-			mService.setRecording(!mService.isRecording());
-			item.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
-			return true;
 		case R.id.menu_mute_button:
 			mService.setMuted(!mService.isMuted());
 			return true;

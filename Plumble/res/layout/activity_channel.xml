@@ -1,14 +1,30 @@
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
+    android:id="@+id/channelcontainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChannelActivity" >
+    tools:context=".ChannelActivity">
 
-    <android.support.v4.view.PagerTabStrip
-        android:id="@+id/tabstrip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:layout_above="@+id/pushtotalk">
 
-</android.support.v4.view.ViewPager>
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/tabstrip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" />
+    </android.support.v4.view.ViewPager>
+
+    <ToggleButton
+        android:id="@+id/pushtotalk"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textOn="Push to Talk"
+        android:textOff="Push to Talk"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>
