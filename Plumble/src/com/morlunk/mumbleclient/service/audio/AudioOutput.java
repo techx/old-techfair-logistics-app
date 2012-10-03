@@ -10,6 +10,7 @@ import java.util.Map;
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.service.MumbleProtocol;
+import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.PacketDataStream;
 import com.morlunk.mumbleclient.service.audio.AudioUser.PacketReadyHandler;
 import com.morlunk.mumbleclient.service.model.User;
@@ -140,8 +141,8 @@ public class AudioOutput implements Runnable {
 			// Get mix frames from the AudioUsers
 			fillMixFrames(mix);
 
-			// If there is output, play it now.
-			if (mix.size() > 0) {
+			// If there is output, play it now if not deafened.
+			if (mix.size() > 0 && !MumbleService.getCurrentService().getCurrentUser().deafened) {
 				// Mix all the frames into one array.
 				mix(out, mix);
 

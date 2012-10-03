@@ -203,6 +203,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         // Store recording icon to adjust for recording changes
         recordItem = menu.findItem(R.id.menu_talk_item);
         
+        // If voice activity is enabled, disable push to talk item.
+		if(settings.isVoiceActivity()) {
+			recordItem.setVisible(false);
+			recordItem.setEnabled(false);
+		}
+        
         return true;
     }
     
@@ -216,6 +222,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		case R.id.menu_talk_item:
 			mService.setRecording(!mService.isRecording());
 			item.setIcon(mService.isRecording() ? R.drawable.microphone : R.drawable.microphone_muted);
+			return true;
+		case R.id.menu_mute_button:
+			mService.setMuted(!mService.isMuted());
+			return true;
+		case R.id.menu_deafen_button:
+			mService.setDeafened(!mService.isDeafened());
 			return true;
 		case R.id.menu_disconnect_item:
 			new Thread(new Runnable() {
@@ -318,6 +330,11 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		final List<Message> messages = mService.getMessageList();
 		for (final Message m : messages) {
 			chatFragment.addMessage(m);
+		}
+		
+		// Start recording for voice activity, as there is no push to talk button.
+		if(settings.isVoiceActivity()) {
+			mService.setRecording(true);
 		}
 	}
 

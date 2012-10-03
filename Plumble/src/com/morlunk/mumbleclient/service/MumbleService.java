@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.sf.mumble.MumbleProto.PermissionDenied;
-import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
-
 import junit.framework.Assert;
+import net.sf.mumble.MumbleProto.UserState;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -77,6 +75,68 @@ public class MumbleService extends Service {
 				}
 			});
 		}
+
+		@Override
+		public void setMuted(final User user, final boolean muted) {
+			handler.post(new ServiceProtocolMessage() {
+				@Override
+				public void process() {
+					user.userState = muted ? User.USERSTATE_MUTED : User.USERSTATE_NONE;
+					user.muted = muted;
+					user.deafened = false;
+					updateNotificationState(user);
+					
+					// Update other clients about mute status
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							final UserState.Builder us = UserState.newBuilder();
+							us.setSession(user.session);
+							us.setSelfMute(user.muted);
+							us.setSelfDeaf(user.deafened);
+							mClient.sendTcpMessage(MessageType.UserState, us);
+						}
+					}).start();
+				}
+
+				@Override
+				protected void broadcast(final IServiceObserver observer)
+					throws RemoteException {
+					observer.onUserUpdated(user);
+				}
+			});
+		}
+
+		@Override
+		public void setDeafened(final User user, final boolean deafened) {
+			handler.post(new ServiceProtocolMessage() {
+				@Override
+				public void process() {
+					user.userState = deafened ? User.USERSTATE_DEAFENED : User.USERSTATE_NONE;
+					user.deafened = deafened;
+					user.muted = deafened;
+					updateNotificationState(user);
+					
+					// Update other clients about deafened status
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							final UserState.Builder us = UserState.newBuilder();
+							us.setSession(user.session);
+							us.setSelfMute(user.muted);
+							us.setSelfDeaf(user.deafened);
+							mClient.sendTcpMessage(MessageType.UserState, us);
+						}
+					}).start();
+				}
+
+				@Override
+				protected void broadcast(final IServiceObserver observer)
+					throws RemoteException {
+					observer.onUserUpdated(user);
+				}
+			});
+		}
 	}
 
 	public class ServiceConnectionHost extends AbstractHost implements
@@ -100,8 +160,8 @@ public class MumbleService extends Service {
 
 					// Handle foreground stuff
 					if (state == MumbleConnectionHost.STATE_CONNECTED) {
-						showNotification();
-						updateConnectionState();
+						showNotification();					
+						updateConnectionState();						
 					} else if (state == MumbleConnectionHost.STATE_DISCONNECTED) {
 						doConnectionDisconnect();
 					} else {
@@ -516,6 +576,14 @@ public class MumbleService extends Service {
 	public boolean isRecording() {
 		return (mRecordThread != null);
 	}
+	
+	public boolean isDeafened() {
+		return mProtocol.currentUser.deafened;
+	}
+	
+	public boolean isMuted() {
+		return mProtocol.currentUser.muted;
+	}
 
 	public void joinChannel(final int channelId) {
 		mProtocol.joinChannel(channelId);
@@ -620,16 +688,36 @@ public class MumbleService extends Service {
 				mProtocol.currentUser,
 				AudioOutputHost.STATE_PASSIVE);
 		}
-		
-		//if(android.os.Build.VERSION.SDK_INT >= 16) {
-			//mNotificationBuilder.setTicker("Recording "+(state ? "ON" : "OFF"));
-			mNotificationBuilder.setSmallIcon(state ? R.drawable.microphone : R.drawable.microphone_muted);
-			mNotificationBuilder.setSubText("Recording is "+(state ? "ON" : "OFF")+".");
-			mNotification = mNotificationBuilder.build();
-			startForegroundCompat(1, mNotification);
-		//} else {
-			// i dunno, TODO implement for older SDK versions
-		//}
+	}
+	
+	public void setMuted(final boolean state) {
+		if(mAudioHost != null && mProtocol != null && mProtocol.currentUser != null) {
+			mAudioHost.setMuted(mProtocol.currentUser, state);
+		}
+	}
+	
+	public void setDeafened(final boolean state) {
+		if(mAudioHost != null && mProtocol != null && mProtocol.currentUser != null) {
+			mAudioHost.setDeafened(mProtocol.currentUser, state);
+		}
+	}
+	
+	public void updateNotificationState(User user) {
+		boolean muted = user.muted;
+		boolean deafened = user.deafened;
+
+		String status = null;
+		if (muted && !deafened) {
+			status = "Muted.";
+		} else if (deafened && muted) {
+			status = "Muted and deafened.";
+		}
+
+		mNotificationBuilder.setTicker(status);
+		mNotificationBuilder.setContentInfo(status);
+
+		mNotification = mNotificationBuilder.build();
+		startForegroundCompat(1, mNotification);
 	}
 
 	public void unregisterObserver(final IServiceObserver observer) {
@@ -695,7 +783,7 @@ public class MumbleService extends Service {
 			getApplicationContext());
 
 		mClientThread = mClient.start(mProtocol);
-
+		
 		return START_NOT_STICKY;
 	}
 
@@ -754,19 +842,21 @@ public class MumbleService extends Service {
 
 	void showNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-		builder.setSmallIcon(R.drawable.microphone);
+		builder.setSmallIcon(R.drawable.ic_stat_notify);
 		builder.setTicker("Plumble Connected");
 		builder.setContentTitle("Plumble");
-		builder.setContentText("Connected to a Mumble server.");
-		builder.setSubText("Recording is OFF.");
+		builder.setContentText("Connected.");
 		builder.setPriority(Notification.PRIORITY_HIGH);
 		
-		// Add notification triggers if PTT is enabled
-		if(settings.isPushToTalk()) {
-			Intent intent = new Intent(this, MumbleNotificationService.class);
-			intent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_TALK);
-			builder.addAction(R.drawable.microphone, "Toggle Recording", PendingIntent.getService(this, 0, intent, 0));
-		}
+		// Add notification triggers
+		Intent muteIntent = new Intent(this, MumbleNotificationService.class);
+		muteIntent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_TALK);
+		
+		Intent deafenIntent = new Intent(this, MumbleNotificationService.class);
+		deafenIntent.putExtra(MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_KEY, MumbleNotificationService.MUMBLE_NOTIFICATION_ACTION_DEAFEN);
+		
+		builder.addAction(R.drawable.microphone, "Mute", PendingIntent.getService(this, 0, muteIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+		builder.addAction(R.drawable.ic_headphones, "Deafen", PendingIntent.getService(this, 1, deafenIntent, PendingIntent.FLAG_CANCEL_CURRENT));
 		
 		Intent channelListIntent = new Intent(
 			MumbleService.this,
@@ -776,8 +866,8 @@ public class MumbleService extends Service {
 		
 		builder.setContentIntent(pendingIntent);
 		
-		mNotification = builder.build();
 		mNotificationBuilder = builder;
+		mNotification = mNotificationBuilder.build();
 		startForegroundCompat(1, mNotification);
 	}
 

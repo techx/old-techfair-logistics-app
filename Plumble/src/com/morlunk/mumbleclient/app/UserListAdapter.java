@@ -193,7 +193,7 @@ public class UserListAdapter extends BaseAdapter {
 	public void removeUser(final int id) {
 		final User user = users.remove(id);
 
-		if (user.getChannel().id == visibleChannel) {
+		if (user != null && user.getChannel().id == visibleChannel) {
 			final int userLocation = Collections.binarySearch(
 				visibleUserList,
 				user,

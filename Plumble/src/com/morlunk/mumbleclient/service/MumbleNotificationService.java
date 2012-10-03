@@ -18,6 +18,7 @@ public class MumbleNotificationService extends Service {
 	
 	public static final String MUMBLE_NOTIFICATION_ACTION_KEY = "notificationKey";
 	public static final String MUMBLE_NOTIFICATION_ACTION_TALK = "pushToTalk";
+	public static final String MUMBLE_NOTIFICATION_ACTION_DEAFEN = "deafen";
 	
 	/* (non-Javadoc)
 	 * @see android.app.Service#onStartCommand(android.content.Intent, int, int)
@@ -27,11 +28,17 @@ public class MumbleNotificationService extends Service {
 		
 		MumbleService service = MumbleService.getCurrentService();
 		
-		if(intent.getExtras().containsKey(MUMBLE_NOTIFICATION_ACTION_KEY)) {
+		if(intent != null &&
+				intent.getExtras() != null && 
+				intent.getExtras().containsKey(MUMBLE_NOTIFICATION_ACTION_KEY)) {
 			String keyString = intent.getExtras().getString(MUMBLE_NOTIFICATION_ACTION_KEY);
 			
 			if(keyString.equals(MUMBLE_NOTIFICATION_ACTION_TALK)) {
-				service.setRecording(!service.isRecording());
+				service.setMuted(!service.isMuted());
+			}
+			
+			if(keyString.equals(MUMBLE_NOTIFICATION_ACTION_DEAFEN)) {
+					service.setDeafened(!service.isDeafened());
 			}
 		} else {
 			Log.i("Plumble", "Notification service: action not specified!");

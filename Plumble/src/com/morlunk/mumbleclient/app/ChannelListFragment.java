@@ -2,7 +2,6 @@ package com.morlunk.mumbleclient.app;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -73,9 +72,12 @@ public class ChannelListFragment extends SherlockFragment {
 	 * Updates the users display with the data from the channelProvider.
 	 */
 	public void updateChannel() {
-		usersAdapter.setVisibleChannel(channelProvider.getChannel().id);
-		usersAdapter.setUsers(channelProvider.getChannelUsers());
-		usersAdapter.notifyDataSetChanged();
+		// We need to make sure the fragment has been attached and is shown before updating the users.
+		if(isVisible()) {
+			usersAdapter.setVisibleChannel(channelProvider.getChannel().id);
+			usersAdapter.setUsers(channelProvider.getChannelUsers());
+			usersAdapter.notifyDataSetChanged();
+		}
 	}
 	
 	/**
