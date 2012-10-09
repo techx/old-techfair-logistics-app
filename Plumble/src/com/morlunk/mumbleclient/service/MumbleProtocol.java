@@ -186,6 +186,8 @@ public class MumbleProtocol {
 			channel = new Channel();
 			channel.id = cs.getChannelId();
 			channel.name = cs.getName();
+			channel.parent = cs.hasParent() ? cs.getParent() : -1;
+			channel.position = cs.getPosition();
 			channels.put(channel.id, channel);
 			host.channelAdded(channel);
 			break;

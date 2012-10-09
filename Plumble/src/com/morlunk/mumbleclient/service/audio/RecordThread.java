@@ -142,7 +142,9 @@ public class RecordThread implements Runnable {
 					out = buffer;
 				}
 				
-				if(voiceActivity && mService.getCurrentUser() != null) {
+				if(voiceActivity &&
+						mService != null &&
+						mService.getCurrentUser() != null) {
 					long totalAmplitude = 0;
 					for(short s : buffer) {
 						totalAmplitude +=Math.abs(s);

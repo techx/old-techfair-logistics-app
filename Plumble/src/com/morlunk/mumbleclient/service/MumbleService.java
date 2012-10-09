@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -532,6 +533,37 @@ public class MumbleService extends Service {
 
 	public List<Channel> getChannelList() {
 		return Collections.unmodifiableList(channels);
+	}
+	
+	/**
+	 * Gets a list of channels sorted by hierarchy.
+	 * @return
+	 */
+	public List<Channel> getSortedChannelList() {
+		List<Channel> unsortedChannels = getChannelList();
+		List<Channel> sortedChannels = new ArrayList<Channel>();
+		
+		for(Channel channel : unsortedChannels) {
+			if(channel.parent == -1) {
+				sortedChannels.add(channel);
+				sortedChannels.addAll(getNestedChannels(channel));
+			}
+		}
+		
+		return sortedChannels;
+	}
+	
+	private List<Channel> getNestedChannels(Channel channel) {
+		List<Channel> nestedChannels = new ArrayList<Channel>();
+		for(Channel c : channels) {
+			if(c.parent == channel.id) {
+				// TODO sort subchannels alphabetically.
+				nestedChannels.add(c);
+				List<Channel> internalChannels = getNestedChannels(c);
+				nestedChannels.addAll(internalChannels);
+			}
+		}
+		return nestedChannels;
 	}
 
 	public int getCodec() {

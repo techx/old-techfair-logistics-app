@@ -7,6 +7,7 @@ import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.ActionBar.LayoutParams;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.DataSetObserver;
@@ -16,11 +17,15 @@ import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -280,11 +285,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			mProgressDialog = null;
 		}
 		
-		List<Channel> channelList = mService.getChannelList();
+		List<Channel> channelList = mService.getSortedChannelList();
 		channelAdapter = new ChannelSpinnerAdapter(channelList);
 		getSupportActionBar().setListNavigationCallbacks(channelAdapter, new OnNavigationListener() {
 			@Override
 			public boolean onNavigationItemSelected(final int itemPosition, long itemId) {
+				
 				new AsyncTask<Channel, Void, Void>() {
 					
 					@Override
@@ -548,11 +554,24 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 				view = getLayoutInflater().inflate(R.layout.sherlock_spinner_dropdown_item, arg2, false);
 			}
 			
+			Channel channel = getItem(arg0);
+			
 			TextView spinnerTitle = (TextView) view.findViewById(android.R.id.text1);
-			spinnerTitle.setText(getItem(arg0).name+" ("+getItem(arg0).userCount+")");
 			spinnerTitle.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+			spinnerTitle.setText(channel.name);
 			
 			return view;
+		}
+		
+		public int getNestedLevel(Channel channel) {
+			if(channel.parent != 0) {
+				for(Channel c : availableChannels) {
+					if(c.id == channel.parent) {
+						return 1+getNestedLevel(c);
+					}
+				}
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -603,7 +622,37 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 		@Override
 		public View getDropDownView(int position, View convertView,
 				ViewGroup parent) {
-			return getView(position, convertView, parent);
+			View view = convertView;
+			if(convertView == null) {
+				view = getLayoutInflater().inflate(R.layout.nested_dropdown_item, parent, false);
+			}
+			
+			DisplayMetrics metrics = getResources().getDisplayMetrics();
+			
+			Channel channel = getItem(position);
+			
+			ImageView returnImage = (ImageView) view.findViewById(R.id.return_image);
+			
+			// Show 'return' arrow and pad the view depending on channel's nested level.
+			// Width of return arrow is 50dp, convert that to px.
+			if(channel.parent != -1) {
+				returnImage.setVisibility(View.VISIBLE);
+				view.setPadding((int)(getNestedLevel(channel)*TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, metrics)), 
+						0, 
+						(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
+						0);
+			} else {
+				returnImage.setVisibility(View.GONE);
+				view.setPadding((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
+						0, 
+						(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
+						0);
+			}
+			
+			TextView spinnerTitle = (TextView) view.findViewById(R.id.channel_name);
+			spinnerTitle.setText(channel.name+" ("+channel.userCount+")");
+			
+			return view;
 		}
 		
 	}

@@ -1,5 +1,8 @@
 package com.morlunk.mumbleclient.service.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,6 +22,8 @@ public class Channel implements Parcelable {
 	public int id;
 	public String name;
 	public int userCount;
+	public int position;
+	public int parent;
 
 	/**
 	 * Value signaling whether this channel has just been removed.
@@ -67,13 +72,18 @@ public class Channel implements Parcelable {
 		dest.writeInt(id);
 		dest.writeString(name);
 		dest.writeInt(userCount);
+		dest.writeInt(position);
+		dest.writeInt(parent);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readFromParcel(final Parcel in) {
 		in.readInt(); // Version
 
 		id = in.readInt();
 		name = in.readString();
 		userCount = in.readInt();
+		position = in.readInt();
+		parent = in.readInt();
 	}
 }
