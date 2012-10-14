@@ -28,6 +28,7 @@ public class Settings {
 	public static final String ARRAY_THEME_LIGHTDARK = "lightDark";
 	public static final String ARRAY_THEME_DARK = "dark";
 	
+	public static final String PREF_CERT = "certificatePath";
 
 	private final SharedPreferences preferences;
 
@@ -53,6 +54,10 @@ public class Settings {
 		return preferences.getString(PREF_THEME, ARRAY_THEME_LIGHTDARK);
 	}
 
+	public String getCertificatePath() {
+		return preferences.getString(PREF_CERT, null);
+	}
+	
 	public boolean isJitterBuffer() {
 		return preferences.getString(PREF_JITTER, ARRAY_JITTER_NONE).equals(
 			ARRAY_JITTER_SPEEX);
