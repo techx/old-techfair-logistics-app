@@ -2,7 +2,8 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="Authentication">
-		<ListPreference android:key="certificatePath" android:title="Certificate" android:summary='The path of the P12 certificate you wish to use. Must be placed in the "Plumble" folder on external storage.'/>
+		<ListPreference android:key="certificatePath" android:title="Certificate File" android:summary='The path of the P12 certificate you wish to use, placed in the "Plumble" folder on external storage.'/>
+		<EditTextPreference android:title="Certificate Password" android:summary="The password for your PKCS12 certificate. (optional)" android:key="certificatePassword"/>
 	</PreferenceCategory><PreferenceCategory android:title="Audio Input">
 		<ListPreference android:entries="@array/audioInputNames" android:entryValues="@array/audioInputValues" android:key="audioInputMethod" android:summary="The way audio is sent to the server." android:title="Input Method" android:defaultValue="voiceActivity"/>
 		<com.morlunk.mumbleclient.preference.SeekBarDialogPreference android:key="detectionThreshold" android:title="Detection Threshold" android:summary="The minimum amplitude required for voice to be detected (only applicable for voice activity)." android:defaultValue="14" android:max="28" multiplier="100"/>

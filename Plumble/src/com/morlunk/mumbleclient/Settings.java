@@ -29,6 +29,7 @@ public class Settings {
 	public static final String ARRAY_THEME_DARK = "dark";
 	
 	public static final String PREF_CERT = "certificatePath";
+	public static final String PREF_CERT_PASSWORD = "certificatePassword";
 
 	private final SharedPreferences preferences;
 
@@ -56,6 +57,10 @@ public class Settings {
 
 	public String getCertificatePath() {
 		return preferences.getString(PREF_CERT, null);
+	}
+	
+	public String getCertificatePassword() {
+		return preferences.getString(PREF_CERT_PASSWORD, "");
 	}
 	
 	public boolean isJitterBuffer() {

@@ -59,15 +59,17 @@ public class Preferences extends SherlockPreferenceActivity {
 		}));
 		
 		// Get arrays of certificate paths and names.
-		String[] certificatePaths = new String[certificateFiles.size()];
+		String[] certificatePaths = new String[certificateFiles.size()+1]; // Extra space for 'None' option
 		for(int x=0;x<certificateFiles.size();x++) {
 			certificatePaths[x] = certificateFiles.get(x).getPath();
 		}
+		certificatePaths[certificatePaths.length-1] = "";
 		
-		String[] certificateNames = new String[certificateFiles.size()];
+		String[] certificateNames = new String[certificateFiles.size()+1]; // Extra space for 'None' option
 		for(int x=0;x<certificateFiles.size();x++) {
 			certificateNames[x] = certificateFiles.get(x).getName();
 		}
+		certificateNames[certificateNames.length-1] = "No Certificate";
 		
 		preference.setEntries(certificateNames);
 		preference.setEntryValues(certificatePaths);

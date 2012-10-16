@@ -11,27 +11,22 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.security.Key;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 import junit.framework.Assert;
 import net.sf.mumble.MumbleProto.Authenticate;
 import net.sf.mumble.MumbleProto.Version;
+
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.params.BasicHttpParams;
+
 import android.util.Log;
 
 import com.google.protobuf.MessageLite;
@@ -173,6 +168,7 @@ public class MumbleConnection implements Runnable {
 	private final String username;
 	private final String password;
 	private final String certificatePath;
+	private final String certificatePassword;
 
 	private final Object stateLock = new Object();
 	final CryptState cryptState = new CryptState();
@@ -206,13 +202,15 @@ public class MumbleConnection implements Runnable {
 		final int port,
 		final String username,
 		final String password,
-		final String certificatePath) {
+		final String certificatePath,
+		final String certificatePassword) {
 		this.connectionHost = connectionHost;
 		this.host = host;
 		this.port = port;
 		this.username = username;
 		this.password = password;
 		this.certificatePath = certificatePath;
+		this.certificatePassword = certificatePassword;
 		
 		connectionHost.setConnectionState(MumbleConnectionHost.STATE_CONNECTING);
 	}
@@ -302,7 +300,7 @@ public class MumbleConnection implements Runnable {
 					port), e);
 			} catch (final IOException e) {
 				reportError(String.format(
-					"Could not connect to Mumble server \"%s:%s\"",
+					"Could not connect to Mumble server \"%s:%s\"! Check your certificate settings.",
 					host,
 					port), e);
 			} catch (final KeyStoreException e) {
@@ -581,33 +579,24 @@ public class MumbleConnection implements Runnable {
 	protected Socket connectTcp() throws NoSuchAlgorithmException,
 		KeyManagementException, IOException, UnknownHostException, KeyStoreException, CertificateException, UnrecoverableKeyException {
 		
-		KeyManager[] keyManagers = null;
+		KeyStore keyStore = null;
 		
-		if(certificatePath != null) {
-			KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		if(certificatePath != null && !certificatePath.equals("")) {
+			keyStore = KeyStore.getInstance("PKCS12");
 			FileInputStream certificateStream = new FileInputStream(certificatePath);
-			keyStore.load(certificateStream, new char[] {});
+			keyStore.load(certificateStream, certificatePassword.toCharArray());
 			certificateStream.close();
-			
-			String aliasString = keyStore.aliases().nextElement();
-			X509Certificate certificate = (X509Certificate) keyStore.getCertificate(aliasString);
-			
-			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
-			keyManagerFactory.init(keyStore, new char[] {});
-			keyManagers = keyManagerFactory.getKeyManagers();
 		}
 		
-		final SSLContext ctx_ = SSLContext.getInstance("TLS");
-		ctx_.init(keyManagers, new TrustManager[] { new LocalSSLTrustManager() }, null);
-		final SSLSocketFactory factory = ctx_.getSocketFactory();
-		final SSLSocket sslSocket = (SSLSocket) factory.createSocket(hostAddress, port);
-		sslSocket.setUseClientMode(true);
-		sslSocket.setEnabledProtocols(new String[] { "TLSv1" });
-		sslSocket.startHandshake();
+		PlumbleSSLSocketFactory socketFactory = new PlumbleSSLSocketFactory(keyStore, certificatePassword, null);
+		socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 		
-		Log.i(Globals.LOG_TAG, "TCP/SSL socket opened");
-
-		return sslSocket;
+		SSLSocket socket = (SSLSocket) socketFactory.createSocket();
+		socket.setUseClientMode(true);
+		socket.setEnabledProtocols(new String[] { "TLSv1" });
+		socketFactory.connectSocket(socket, host, port, null, 0, new BasicHttpParams());
+		
+		return socket;
 	}
 
 	protected DatagramSocket connectUdp() throws SocketException,
