@@ -3,7 +3,6 @@ package com.morlunk.mumbleclient.app;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;

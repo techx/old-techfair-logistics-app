@@ -593,8 +593,10 @@ public class MumbleConnection implements Runnable {
 		
 		SSLSocket socket = (SSLSocket) socketFactory.createSocket();
 		socket.setUseClientMode(true);
+		socket.setKeepAlive(true);
 		socket.setEnabledProtocols(new String[] { "TLSv1" });
 		socketFactory.connectSocket(socket, host, port, null, 0, new BasicHttpParams());
+		socket.startHandshake();
 		
 		return socket;
 	}

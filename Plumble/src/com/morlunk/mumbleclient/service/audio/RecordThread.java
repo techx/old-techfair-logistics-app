@@ -118,7 +118,7 @@ public class RecordThread implements Runnable {
 
 			ar.startRecording();
 			
-			while (running && !Thread.interrupted()) {
+			while (running && mService.isConnected() && !Thread.interrupted()) {
 				final int read = ar.read(buffer, 0, frameSize);
 
 				if (read == AudioRecord.ERROR_BAD_VALUE ||
@@ -143,7 +143,7 @@ public class RecordThread implements Runnable {
 				}
 				
 				if(voiceActivity &&
-						mService != null &&
+						mService.isConnected() &&
 						mService.getCurrentUser() != null) {
 					long totalAmplitude = 0;
 					for(short s : buffer) {

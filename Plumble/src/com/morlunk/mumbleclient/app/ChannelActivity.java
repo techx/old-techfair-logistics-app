@@ -2,12 +2,9 @@ package com.morlunk.mumbleclient.app;
 
 import java.util.List;
 
-import net.sf.mumble.MumbleProto.PermissionDenied;
 import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.ActionBar.LayoutParams;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.DataSetObserver;
@@ -36,6 +33,7 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -43,6 +41,8 @@ import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.model.Channel;
 import com.morlunk.mumbleclient.service.model.Message;
 import com.morlunk.mumbleclient.service.model.User;
+
+import crittercism.android.e;
 
 
 /**
@@ -131,7 +131,9 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					mService.setRecording(isChecked);
+					if(mService != null) {
+						mService.setRecording(isChecked);
+					}
 				}
 			});
         }
@@ -306,20 +308,36 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 					protected void onPostExecute(Void result) {
 						super.onPostExecute(result);
 						setChannel(channelAdapter.getItem(itemPosition));
+						
+						int channelId = channelAdapter.getItem(itemPosition).id;
+						if(settings.getLastChannel(mService.getServerId()) != channelId) {
+							settings.setLastChannel(mService.getServerId(), channelAdapter.getItem(itemPosition).id); // Cache the last channel
+						}
 					}
 				}.execute(channelAdapter.getItem(itemPosition));
 				return true;
 			}
 		});
 		
-		// If we don't have visible channel selected, default to the current channel.
+		// If we don't have visible channel selected, get the last stored channel from preferences.
 		// Setting channel also synchronizes the UI so we don't need to do it manually.
-		//
-		// TODO: Resync channel if current channel was visible on pause.
-		// Currently if the user is moved to another channel while this activity
-		// is paused the channel isn't updated when the activity resumes.
 		if (visibleChannel == null) {
-			setChannel(mService.getCurrentChannel());
+			
+			int lastChannelId = settings.getLastChannel(mService.getServerId());
+			
+			Channel lastChannel = null;
+			for(Channel channel : channelList) {
+				if(channel.id == lastChannelId) {
+					lastChannel = channel;
+				}
+			}
+			
+			if(lastChannel != null) {
+				getSupportActionBar().setSelectedNavigationItem(
+						channelList.indexOf(lastChannel));
+			} else {
+				setChannel(mService.getCurrentChannel());
+			}
 		} else {
 			// Re-select visible channel. Necessary after a rotation is
 			// performed or the app is suspended.

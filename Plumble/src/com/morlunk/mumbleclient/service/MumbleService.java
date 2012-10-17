@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -467,6 +466,7 @@ public class MumbleService extends Service {
 	public static final String EXTRA_USERNAME = "mumbleclient.extra.USERNAME";
 	public static final String EXTRA_PASSWORD = "mumbleclient.extra.PASSWORD";
 	public static final String EXTRA_USER = "mumbleclient.extra.USER";
+	public static final String EXTRA_SERVER_ID = "mumbleclient.extra.SERVER_ID";
 	
 	private static MumbleService currentService;
 
@@ -474,6 +474,7 @@ public class MumbleService extends Service {
 	private MumbleProtocol mProtocol;
 
 	private Settings settings;
+	private int serverId;
 	
 	private Thread mClientThread;
 	private Thread mRecordThread;
@@ -517,6 +518,10 @@ public class MumbleService extends Service {
 		return currentService;
 	}
 	
+	public int getServerId() {
+		return serverId;
+	}
+
 	public boolean canSpeak() {
 		return mProtocol != null && mProtocol.canSpeak;
 	}
@@ -783,7 +788,8 @@ public class MumbleService extends Service {
 		}
 
 		Log.i(Globals.LOG_TAG, "MumbleService: Starting service");
-
+		
+		this.serverId = intent.getIntExtra(EXTRA_SERVER_ID, -1);
 		final String host = intent.getStringExtra(EXTRA_HOST);
 		final int port = intent.getIntExtra(EXTRA_PORT, -1);
 		final String username = intent.getStringExtra(EXTRA_USERNAME);

@@ -7,6 +7,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -61,7 +62,7 @@ public class PlumbleSSLSocketFactory extends SSLSocketFactory {
 		}
 		
 		
-		sslContext.init(keyManagers, new TrustManager[] { trustManager }, null);
+		sslContext.init(keyManagers, new TrustManager[] { trustManager }, new SecureRandom());
 	}
 	
 	@Override

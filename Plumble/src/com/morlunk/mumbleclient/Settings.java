@@ -30,6 +30,9 @@ public class Settings {
 	
 	public static final String PREF_CERT = "certificatePath";
 	public static final String PREF_CERT_PASSWORD = "certificatePassword";
+	
+	public static final String PREF_LAST_CHANNEL = "lastChannels";
+	public static final String LAST_CHANNEL_PREFIX = "lastChannel_"; // TODO move this to db code or something. It's messy as hell.
 
 	private final SharedPreferences preferences;
 
@@ -74,5 +77,14 @@ public class Settings {
 	
 	public boolean isPushToTalk() {
 		return preferences.getString(PREF_METHOD, ARRAY_METHOD_VOICE).equals(ARRAY_METHOD_PTT);
+	}
+	
+	public int getLastChannel(int serverId) {
+		return preferences.getInt(String.format("%s%d", LAST_CHANNEL_PREFIX, serverId), -1);
+	}
+	
+	public void setLastChannel(int serverId, int channelId) {
+		preferences.edit()
+		.putInt(String.format("%s%d", LAST_CHANNEL_PREFIX, serverId), channelId).commit();
 	}
 }

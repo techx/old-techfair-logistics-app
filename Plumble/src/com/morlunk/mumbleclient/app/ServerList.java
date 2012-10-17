@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.crittercism.app.Crittercism;
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -303,6 +304,7 @@ public class ServerList extends ConnectedListActivity {
 	 */
 	protected final void connectServer(final long id) {
 		final Cursor c = dbAdapter.fetchServer(id);
+		final int serverId = c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_ID));
 		final String host = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_HOST));
 		final int port = c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PORT));
 		final String username = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_USERNAME));
@@ -313,6 +315,7 @@ public class ServerList extends ConnectedListActivity {
 
 		final Intent connectionIntent = new Intent(this, MumbleService.class);
 		connectionIntent.setAction(MumbleService.ACTION_CONNECT);
+		connectionIntent.putExtra(MumbleService.EXTRA_SERVER_ID, serverId);
 		connectionIntent.putExtra(MumbleService.EXTRA_HOST, host);
 		connectionIntent.putExtra(MumbleService.EXTRA_PORT, port);
 		connectionIntent.putExtra(MumbleService.EXTRA_USERNAME, username);
@@ -333,7 +336,7 @@ public class ServerList extends ConnectedListActivity {
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//Crittercism.init(getApplicationContext(), "50650bc62cd95250d3000004");
+		Crittercism.init(getApplicationContext(), "50650bc62cd95250d3000004");
 		
 		setContentView(R.layout.main);
 		
