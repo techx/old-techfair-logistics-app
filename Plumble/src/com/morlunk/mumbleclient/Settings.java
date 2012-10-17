@@ -10,10 +10,6 @@ public class Settings {
 	public static final String ARRAY_STREAM_MUSIC = "music";
 	public static final String ARRAY_STREAM_CALL = "call";
 
-	public static final String PREF_JITTER = "buffering";
-	public static final String ARRAY_JITTER_NONE = "none";
-	public static final String ARRAY_JITTER_SPEEX = "speex";
-
 	public static final String PREF_METHOD = "audioInputMethod";
 	public static final String ARRAY_METHOD_VOICE = "voiceActivity";
 	public static final String ARRAY_METHOD_PTT = "ptt";
@@ -64,11 +60,6 @@ public class Settings {
 	
 	public String getCertificatePassword() {
 		return preferences.getString(PREF_CERT_PASSWORD, "");
-	}
-	
-	public boolean isJitterBuffer() {
-		return preferences.getString(PREF_JITTER, ARRAY_JITTER_NONE).equals(
-			ARRAY_JITTER_SPEEX);
 	}
 	
 	public boolean isVoiceActivity() {

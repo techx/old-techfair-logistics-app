@@ -100,7 +100,7 @@ public class AudioOutput implements Runnable {
 		final int flags) {
 		AudioUser user = users.get(u);
 		if (user == null) {
-			user = new AudioUser(u, settings.isJitterBuffer());
+			user = new AudioUser(u);
 			users.put(u, user);
 			// Don't add the user to userPackets yet. The collection should
 			// have only users with ready frames. Since this method is

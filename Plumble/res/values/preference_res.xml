@@ -13,18 +13,6 @@
 	</string-array>
 
 	<string-array
-		name="bufferNames">
-		<item>Play Immediately</item>
-		<item>Speex Jitter Buffer</item>
-	</string-array>
-
-	<string-array
-		name="bufferValues">
-		<item>none</item>
-		<item>speex</item>
-	</string-array>
-	
-	<string-array
 	    name="audioInputNames">
 	    <item>Voice Activity</item>
 	    <item>Push to Talk</item>

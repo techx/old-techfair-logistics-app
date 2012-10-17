@@ -49,13 +49,4 @@ public class Native {
 	public final static native long speex_resampler_init(long nb_channels, long in_rate, long out_rate, int quality);
 	public final static native void speex_resampler_destroy(@JniArg(cast = "SpeexResamplerState *") long st);
 	public final static native int speex_resampler_process_int(@JniArg(cast = "SpeexResamplerState *") long st, int channel_index, @JniArg(flags = {NO_OUT}) short[] in, int[] in_len, @JniArg(flags = {NO_IN}) short[] out, int[] out_len);
-
-	public final static native @JniMethod(cast = "JitterBuffer *") long jitter_buffer_init(int step_size);
-	public final static native void jitter_buffer_destroy(@JniArg(cast = "JitterBuffer *") long jitter);
-	public final static native void jitter_buffer_put(@JniArg(cast = "JitterBuffer *") long jitter, @JniArg(flags = {NO_OUT}) JitterBufferPacket packet);
-	public final static native int jitter_buffer_get(@JniArg(cast = "JitterBuffer *") long jitter, JitterBufferPacket packet, int desired_span, @JniArg(flags = {NO_IN}) int[] current_timestamp);
-	public final static native int jitter_buffer_get_pointer_timestamp(@JniArg(cast = "JitterBuffer *") long jitter);
-	public final static native void jitter_buffer_tick(@JniArg(cast = "JitterBuffer *") long jitter);
-	public final static native int jitter_buffer_ctl(@JniArg(cast = "JitterBuffer *") long jitter, int request, int[] ptr);
-	public final static native int jitter_buffer_update_delay(@JniArg(cast = "JitterBuffer *") long jitter, @JniArg(flags = {NO_OUT}) JitterBufferPacket packet, int[] start_offset);
 }

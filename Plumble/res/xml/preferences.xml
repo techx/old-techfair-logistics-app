@@ -19,13 +19,6 @@
 			android:defaultValue="music"
 			android:entries="@array/streamNames"
 			android:entryValues="@array/streamValues" />
-		<ListPreference
-			android:title="Buffering"
-			android:summary="The scheme used when trying to reduce audio jittering."
-			android:key="buffering"
-			android:defaultValue="none"
-			android:entries="@array/bufferNames"
-			android:entryValues="@array/bufferValues" />
 		<EditTextPreference
 			android:title="Audio quality"
 			android:defaultValue="60000"
