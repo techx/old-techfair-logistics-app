@@ -6,6 +6,7 @@ import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
@@ -15,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,7 +33,6 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
@@ -41,8 +40,6 @@ import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.model.Channel;
 import com.morlunk.mumbleclient.service.model.Message;
 import com.morlunk.mumbleclient.service.model.User;
-
-import crittercism.android.e;
 
 
 /**
@@ -78,6 +75,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	private ChannelSpinnerAdapter channelAdapter;
 
 	private ProgressDialog mProgressDialog;
+	private ToggleButton mTalkToggleButton;
 	
 	// Fragments
 	private ChannelListFragment listFragment;
@@ -125,9 +123,9 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         
         // Set up PTT button.
         if(settings.isPushToTalk()) {
-        	ToggleButton talkButton = (ToggleButton) findViewById(R.id.pushtotalk);
-        	talkButton.setVisibility(View.VISIBLE);
-        	talkButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        	mTalkToggleButton = (ToggleButton) findViewById(R.id.pushtotalk);
+        	mTalkToggleButton.setVisibility(View.VISIBLE);
+        	mTalkToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -259,9 +257,30 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 
 			return true;
 		}
+		
+		// Push to talk hardware key
+		if(settings.isPushToTalk() && 
+				keyCode == settings.getPushToTalkKey() && 
+				event.getAction() == KeyEvent.ACTION_DOWN) {
+			mTalkToggleButton.setChecked(true);
+			return true;
+		}
 
 		return super.onKeyDown(keyCode, event);
 	}
+    
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+		// Push to talk hardware key
+    	if(settings.isPushToTalk() && 
+				keyCode == settings.getPushToTalkKey() && 
+				event.getAction() == KeyEvent.ACTION_UP) {
+			mTalkToggleButton.setChecked(false);
+			return true;
+		}
+    	
+    	return super.onKeyUp(keyCode, event);
+    }
     
     /**
 	 * Handles activity initialization when the Service has connected.

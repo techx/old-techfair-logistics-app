@@ -17,6 +17,9 @@ public class Settings {
 	public static final String PREF_THRESHOLD = "detectionThreshold";
 	public static final Integer DEFAULT_THRESHOLD = 1400;
 	
+	public static final String PREF_PUSH_KEY = "talkKey";
+	public static final Integer DEFAULT_PUSH_KEY = -1;
+	
 	public static final String PREF_QUALITY = "quality";
 	public static final String DEFAULT_QUALITY = "60000";
 	
@@ -48,6 +51,10 @@ public class Settings {
 	
 	public int getDetectionThreshold() {
 		return preferences.getInt(PREF_THRESHOLD, DEFAULT_THRESHOLD);
+	}
+	
+	public int getPushToTalkKey() {
+		return preferences.getInt(PREF_PUSH_KEY, DEFAULT_PUSH_KEY);
 	}
 	
 	public String getTheme() {

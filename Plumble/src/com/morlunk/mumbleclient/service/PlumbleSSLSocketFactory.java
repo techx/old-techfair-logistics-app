@@ -61,7 +61,6 @@ public class PlumbleSSLSocketFactory extends SSLSocketFactory {
 			keyManagers = factory.getKeyManagers();
 		}
 		
-		
 		sslContext.init(keyManagers, new TrustManager[] { trustManager }, new SecureRandom());
 	}
 	

@@ -30,5 +30,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_channel">Channel</string>
+    <string name="pressKey">Press a hardware key to bind to push-to-talk.</string>
+    <string name="pressKeyInfo">Note: due to limitations in Android, the app must be open to use hardware key push to talk.</string>
 
 </resources>
