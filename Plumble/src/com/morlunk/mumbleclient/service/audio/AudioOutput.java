@@ -7,19 +7,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.util.Log;
+
 import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.Settings;
+import com.morlunk.mumbleclient.Settings.PlumbleCallMode;
 import com.morlunk.mumbleclient.service.MumbleProtocol;
 import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.PacketDataStream;
 import com.morlunk.mumbleclient.service.audio.AudioUser.PacketReadyHandler;
 import com.morlunk.mumbleclient.service.model.User;
-
-
-import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioTrack;
-import android.util.Log;
 
 /**
  * Audio output thread.
@@ -68,7 +69,7 @@ public class AudioOutput implements Runnable {
 
 		minBufferSize = AudioTrack.getMinBufferSize(
 			MumbleProtocol.SAMPLE_RATE,
-			AudioFormat.CHANNEL_CONFIGURATION_MONO,
+			AudioFormat.CHANNEL_OUT_MONO,
 			AudioFormat.ENCODING_PCM_16BIT);
 
 		// Double the buffer size to reduce stuttering.
@@ -79,11 +80,19 @@ public class AudioOutput implements Runnable {
 											   MumbleProtocol.FRAME_SIZE);
 
 		bufferSize = frameCount * MumbleProtocol.FRAME_SIZE;
+		
+		PlumbleCallMode callMode = settings.getCallMode();
+		int stream = AudioManager.STREAM_MUSIC;
+		if(callMode == PlumbleCallMode.SPEAKERPHONE) {
+			stream = AudioManager.STREAM_MUSIC;
+		} else if(callMode == PlumbleCallMode.VOICE_CALL) {
+			stream = AudioManager.STREAM_VOICE_CALL;
+		}
 
 		at = new AudioTrack(
-			settings.getAudioStream(),
+			stream,
 			MumbleProtocol.SAMPLE_RATE,
-			AudioFormat.CHANNEL_CONFIGURATION_MONO,
+			AudioFormat.CHANNEL_OUT_MONO,
 			AudioFormat.ENCODING_PCM_16BIT,
 			bufferSize,
 			AudioTrack.MODE_STREAM);

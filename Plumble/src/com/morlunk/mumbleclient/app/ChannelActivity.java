@@ -5,10 +5,15 @@ import java.util.List;
 import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.DataSetObserver;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -35,6 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
+import com.morlunk.mumbleclient.Settings.PlumbleCallMode;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;
 import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.model.Channel;
@@ -53,7 +59,7 @@ interface ChannelProvider {
 	public void sendChannelMessage(String message);
 }
 
-public class ChannelActivity extends ConnectedActivity implements ChannelProvider {
+public class ChannelActivity extends ConnectedActivity implements ChannelProvider, SensorEventListener {
 
 	public static final String JOIN_CHANNEL = "join_channel";
 	public static final String SAVED_STATE_VISIBLE_CHANNEL = "visible_channel";
@@ -80,6 +86,10 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	// Fragments
 	private ChannelListFragment listFragment;
 	private ChannelChatFragment chatFragment;
+	
+	// Proximity sensor
+	private SensorManager sensorManager;
+	private Sensor proximitySensor;
 	
 	private Settings settings;
 	
@@ -111,7 +121,19 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
 		
-		setVolumeControlStream(settings.getAudioStream());
+        // Handle differences in CallMode
+        
+        PlumbleCallMode callMode = settings.getCallMode();
+        
+        if(callMode == PlumbleCallMode.SPEAKERPHONE) {
+    		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        } else if(callMode == PlumbleCallMode.VOICE_CALL) {
+        	setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+        	
+        	// Set up proximity sensor
+        	sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        	proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        }
 		
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -208,8 +230,19 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     @Override
     protected void onResume() {
     	super.onResume();
+    	
+    	if(settings.getCallMode() == PlumbleCallMode.VOICE_CALL)
+    		sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_UI);
     }
-
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	
+    	if(settings.getCallMode() == PlumbleCallMode.VOICE_CALL)
+    		sensorManager.unregisterListener(this);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_channel, menu);
@@ -455,6 +488,21 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	 */
 	private void permissionDenied(String reason, DenyType denyType) {
 		Toast.makeText(getApplicationContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
+	}
+	
+	// Voice call mode sensors
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if(event.sensor == proximitySensor) {
+			float distance = event.values[0];
+			setVisible(event.sensor.getMaximumRange() == distance);
+		}
 	}
 	
     /**

@@ -2,14 +2,18 @@ package com.morlunk.mumbleclient;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.preference.PreferenceManager;
 
 public class Settings {
-	public static final String PREF_STREAM = "stream";
-	public static final String ARRAY_STREAM_MUSIC = "music";
-	public static final String ARRAY_STREAM_CALL = "call";
-
+	public static final String PREF_CALL_MODE = "callMode";
+	public static final String ARRAY_CALL_MODE_SPEAKER = "speakerphone";
+	public static final String ARRAY_CALL_MODE_VOICE = "voice";
+	
+	public enum PlumbleCallMode {
+		VOICE_CALL,
+		SPEAKERPHONE
+	}
+	
 	public static final String PREF_METHOD = "audioInputMethod";
 	public static final String ARRAY_METHOD_VOICE = "voiceActivity";
 	public static final String ARRAY_METHOD_PTT = "ptt";
@@ -38,16 +42,21 @@ public class Settings {
 	public Settings(final Context ctx) {
 		preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
+	
+	public PlumbleCallMode getCallMode() {
+		String callModeValue = preferences.getString(PREF_CALL_MODE, ARRAY_CALL_MODE_SPEAKER);
+		if(callModeValue.equals(ARRAY_CALL_MODE_SPEAKER)) {
+			return PlumbleCallMode.SPEAKERPHONE;
+		} else if(callModeValue.equals(ARRAY_CALL_MODE_VOICE)) {
+			return PlumbleCallMode.VOICE_CALL;
+		}
+		return null;
+	}
 
 	public int getAudioQuality() {
 		return Integer.parseInt(preferences.getString(Settings.PREF_QUALITY, DEFAULT_QUALITY));
 	}
-
-	public int getAudioStream() {
-		return preferences.getString(PREF_STREAM, ARRAY_STREAM_MUSIC).equals(
-			ARRAY_STREAM_MUSIC) ? AudioManager.STREAM_MUSIC
-			: AudioManager.STREAM_VOICE_CALL;
-	}
+	
 	
 	public int getDetectionThreshold() {
 		return preferences.getInt(PREF_THRESHOLD, DEFAULT_THRESHOLD);

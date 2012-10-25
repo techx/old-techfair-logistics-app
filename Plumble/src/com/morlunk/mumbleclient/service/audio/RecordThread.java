@@ -2,12 +2,15 @@ package com.morlunk.mumbleclient.service.audio;
 
 import java.util.LinkedList;
 
+import android.annotation.TargetApi;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Build.VERSION;
 import android.util.Log;
 
 import com.morlunk.mumbleclient.Settings;
+import com.morlunk.mumbleclient.Settings.PlumbleCallMode;
 import com.morlunk.mumbleclient.jni.Native;
 import com.morlunk.mumbleclient.jni.celtConstants;
 import com.morlunk.mumbleclient.service.MumbleProtocol;
@@ -29,6 +32,7 @@ public class RecordThread implements Runnable {
 	private final short[] buffer;
 	private int bufferSize;
 	private boolean voiceActivity = false;
+	private PlumbleCallMode callMode;
 	private final long celtEncoder;
 	private final long celtMode;
 	private final int framesPerPacket = 6;
@@ -47,16 +51,16 @@ public class RecordThread implements Runnable {
 		mService = service;
 		audioQuality = new Settings(mService.getApplicationContext()).getAudioQuality();
 		this.voiceActivity = voiceActivity;
-		
 
 		Settings settings = new Settings(service);
 		// Get detection threshold
 		detectionThreshold = settings.getDetectionThreshold();
+		callMode = settings.getCallMode();
 
 		for (final int s : new int[] { 48000, 44100, 22050, 11025, 8000 }) {
 			bufferSize = AudioRecord.getMinBufferSize(
 				s,
-				AudioFormat.CHANNEL_CONFIGURATION_MONO,
+				AudioFormat.CHANNEL_IN_MONO,
 				AudioFormat.ENCODING_PCM_16BIT);
 			if (bufferSize > 0) {
 				recordingSampleRate = s;
@@ -98,17 +102,25 @@ public class RecordThread implements Runnable {
 		}
 	}
 
+	@TargetApi(11)
 	@Override
 	public final void run() {
 		final boolean running = true;
 		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-
+		
+		int audioSource = MediaRecorder.AudioSource.MIC;
+		
+		if(callMode == PlumbleCallMode.SPEAKERPHONE) {
+			audioSource = (VERSION.SDK_INT >= 11 ? MediaRecorder.AudioSource.VOICE_COMMUNICATION : MediaRecorder.AudioSource.MIC);
+		} else if(callMode == PlumbleCallMode.VOICE_CALL) {
+			audioSource = (VERSION.SDK_INT >= 11 ? MediaRecorder.AudioSource.VOICE_COMMUNICATION : MediaRecorder.AudioSource.DEFAULT);
+		}
+		
 		AudioRecord ar = null;
 		try {
-			ar = new AudioRecord(
-				MediaRecorder.AudioSource.MIC,
+			ar = new AudioRecord(audioSource,
 				recordingSampleRate,
-				AudioFormat.CHANNEL_CONFIGURATION_MONO,
+				AudioFormat.CHANNEL_IN_MONO,
 				AudioFormat.ENCODING_PCM_16BIT,
 				64 * 1024);
 

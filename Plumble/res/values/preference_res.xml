@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string-array
-		name="streamNames">
-		<item>Music</item>
-		<item>Voice Call</item>
-	</string-array>
-
-	<string-array
-		name="streamValues">
-		<item>music</item>
-		<item>call</item>
-	</string-array>
 
 	<string-array
 	    name="audioInputNames">
@@ -34,5 +23,14 @@
 	    name="themeValues">
 	    <item>lightDark</item>
 	    <item>dark</item>
+	</string-array>
+	<string-array name="callModeNames">
+	    <item>Speakerphone</item>
+	    <item>Voice Call</item>
+	</string-array>
+	
+	<string-array name="callModeValues">
+	    <item>speakerphone</item>
+	    <item>voice</item>
 	</string-array>
 </resources>
