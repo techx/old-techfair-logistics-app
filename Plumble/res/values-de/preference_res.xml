@@ -34,23 +34,23 @@
 	    <item>voice</item>
 	</string-array>
 
-	<!--<string name="authentication">Authentication</string>
-	<string name="certificateFile">Certificate File</string>
-	<string name="certificateFileSum">The path of the P12 certificate you wish to use, placed in the "Plumble" folder on external storage.</string>
-	<string name="certificatePassword">Certificate Password</string>
-	<string name="certificatePasswordSum">The password for your PKCS12 certificate. (optional)</string>
-	<string name="audioInput">Audio Input</string>
-	<string name="audioInputMethodSum">The way audio is sent to the server.</string>
-	<string name="audioInputMethod">Input Method</string>
-	<string name="callMode">Call Mode</string>
-	<string name="callModeSum">The call mode of Plumble, whether to act as a voice call or speakerphone.</string>
-	<string name="detectionThreshold">Detection Threshold</string>
-	<string name="detectionThresholdSum">The minimum amplitude required for voice to be detected (only applicable for voice activity).</string>
-	<string name="pttKey">Push to Talk Key</string>
-	<string name="pttKeySum">A hardware key to bind to Push to Talk. (optional)</string>
-	<string name="appearance">Appearance</string>
-	<string name="themeSum">The theme of the app\'s channel view.</string>
+	<string name="authentication">Authentifizierung</string>
+	<string name="certificateFile">Zertifikatsdatei</string>
+	<string name="certificateFileSum">Der Pfad des gewünschten P12 Zertifikats, platziert im "Plumble" Verzeichnis auf dem externen Speicher.</string>
+	<string name="certificatePassword">Zertifikatspassword</string>
+	<string name="certificatePasswordSum">Das Passwort für dein PKCS12 Zertifikat. (optional)</string>
+	<string name="audioInput">Audioeingabe</string>
+	<string name="audioInputMethodSum">Wie das Audio zum Server gesendet werden soll.</string>
+	<string name="audioInputMethod">Eingabemethode</string>
+	<string name="callMode">Anrufmodus</string>
+	<string name="callModeSum">Der Anrufmodus von Plumble, entweder wie bei einem Sprachanruf oder einer Freisprecheinrichtung.</string>
+	<string name="detectionThreshold">Schwellwerterkennung</string>
+	<string name="detectionThresholdSum">Der minimalste benötigte Ausschlag, um die Sprache zu erkennen (nur bei Sprachaktivität anwendbar).</string>
+	<string name="pttKey">Sprechtaste</string>
+	<string name="pttKeySum">Eine Hardwaretaste für die Sprachaktivierung. (optional)</string>
+	<string name="appearance">Aussehen</string>
+	<string name="themeSum">Das Theme der Kanalansicht.</string>
 	<string name="theme">Theme</string>
-	<string name="advancedAudio">Advanced Audio</string>
-	<string name="audioQuality">Audio quality</string>-->
+	<string name="advancedAudio">Erweitertes Audio</string>
+	<string name="audioQuality">Audio Qualität</string>
 </resources>
