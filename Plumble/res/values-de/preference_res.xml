@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string-array
+	    name="audioInputNames">
+	    <item>Sprachaktivierung</item>
+	    <item>zum Sprechen drücken</item>
+	</string-array>
+	
+	<string-array
+	    name="audioInputValues">
+	    <item>voiceActivity</item>
+	    <item>ptt</item>
+	</string-array>
+	
+	<string-array
+	    name="themeNames">
+	    <item>Hell-Dunkel</item>
+	    <item>Dunkel</item>
+	</string-array>
+	
+	<string-array
+	    name="themeValues">
+	    <item>lightDark</item>
+	    <item>dark</item>
+	</string-array>
+	<string-array name="callModeNames">
+	    <item>Freisprecheinrichtung</item>
+	    <item>Sprachanruf</item>
+	</string-array>
+	
+	<string-array name="callModeValues">
+	    <item>speakerphone</item>
+	    <item>voice</item>
+	</string-array>
+</resources>
