@@ -36,10 +36,14 @@
     <string name="mute">Stumm stellen</string>
     <string name="deafen">Taub stellen</string>
     <string name="disconnect">Trennen</string>
+    <string name="disconnectSure">Bist du dir sicher, dass du die Verbindung zu Mumble trennen möchtest?</string>
     <string name="save">Speichern</string>
     <string name="add">Hinzufügen</string>
     <string name="preferences">Einstellungen</string>
     <string name="togglelocalmute">lokale Stummschaltung wechseln</string>
     <string name="chat">Chat</string>
+    <string name="permDenied">Zugriff verboten!</string>
+    <string name="connectionRefused">Verbindung abgelehnt</string>
+    <string name="sureDeleteServer">Bist du dir sicher, dass du diesen Server löschen möchtest?</string>
 
 </resources>

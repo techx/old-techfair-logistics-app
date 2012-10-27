@@ -53,4 +53,5 @@
 	<string name="theme">Theme</string>
 	<string name="advancedAudio">Advanced Audio</string>
 	<string name="audioQuality">Audio quality</string>
+	<string name="noCert">No Certificate</string>
 </resources>
