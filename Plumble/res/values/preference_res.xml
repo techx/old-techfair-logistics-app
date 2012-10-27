@@ -36,7 +36,7 @@
 
 	<string name="authentication">Authentication</string>
 	<string name="certificateFile">Certificate File</string>
-	<string name="certificateFileSum">The path of the P12 certificate you wish to use, placed in the "Plumble" folder on external storage.</string>
+	<string name="certificateFileSum">The path of the P12 certificate you wish to use, placed in the \"Plumble\" folder on external storage.</string>
 	<string name="certificatePassword">Certificate Password</string>
 	<string name="certificatePasswordSum">The password for your PKCS12 certificate. (optional)</string>
 	<string name="audioInput">Audio Input</string>
