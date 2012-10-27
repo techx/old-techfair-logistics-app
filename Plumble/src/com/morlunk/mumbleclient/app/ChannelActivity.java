@@ -487,7 +487,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	 * @param valueOf
 	 */
 	private void permissionDenied(String reason, DenyType denyType) {
-		Toast.makeText(getApplicationContext(), getResources().getString(R.string.permDenied), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), R.string.permDenied, Toast.LENGTH_SHORT).show();
 	}
 	
 	// Voice call mode sensors
