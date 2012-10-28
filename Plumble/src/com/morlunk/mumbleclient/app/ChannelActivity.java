@@ -136,7 +136,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         	sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         	proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         }
-        
+		
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -350,10 +350,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 				
 				new AsyncTask<Channel, Void, Void>() {
 					
-					protected void onPreExecute() {
-						
-					};
-					
 					@Override
 					protected Void doInBackground(Channel... params) {
 						mService.joinChannel(params[0].id);
@@ -372,8 +368,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 						if(settings.getLastChannel(mService.getServerId()) != channelId) {
 							settings.setLastChannel(mService.getServerId(), channelAdapter.getItem(itemPosition).id); // Cache the last channel
 						}
-						
-						mProgressDialog.dismiss();
 					}
 				}.execute(channelAdapter.getItem(itemPosition));
 				return true;
