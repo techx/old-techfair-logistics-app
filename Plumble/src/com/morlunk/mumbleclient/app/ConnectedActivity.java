@@ -109,9 +109,10 @@ public class ConnectedActivity extends SherlockFragmentActivity {
 
 	protected void onDisconnected() {
 		final String error = mService.getError();
-		if (error != null) {
+		
+		if(error != null) {
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-			alertBuilder.setTitle(R.string.connectionRefused);
+			alertBuilder.setTitle(R.string.disconnected);
 			
 			alertBuilder.setPositiveButton("Ok", new OnClickListener() {
 				@Override
@@ -125,8 +126,8 @@ public class ConnectedActivity extends SherlockFragmentActivity {
 					finish();
 				}
 			});
-			
 			alertBuilder.setMessage(error);
+			
 			alertBuilder.show();
 		} else {
 			finish();

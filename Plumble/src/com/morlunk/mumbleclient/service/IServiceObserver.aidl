@@ -14,7 +14,7 @@ interface IServiceObserver {
 	void onCurrentUserUpdated();
 	
 	void onUserAdded(in User user);
-	void onUserRemoved(in User user);
+	void onUserRemoved(in User user, in String reason);
 	void onUserUpdated(in User user);
 	
 	void onMessageReceived(in Message msg);

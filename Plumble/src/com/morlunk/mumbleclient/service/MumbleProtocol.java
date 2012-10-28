@@ -15,11 +15,9 @@ import net.sf.mumble.MumbleProto.ServerSync;
 import net.sf.mumble.MumbleProto.TextMessage;
 import net.sf.mumble.MumbleProto.UserRemove;
 import net.sf.mumble.MumbleProto.UserState;
-import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
+import net.sf.mumble.MumbleProto.Reject.RejectType;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
 import com.morlunk.mumbleclient.Globals;
@@ -301,13 +299,14 @@ public class MumbleProtocol {
 		case UserRemove:
 			final UserRemove ur = UserRemove.parseFrom(buffer);
 			user = findUser(ur.getSession());
+						
 			users.remove(user.session);
 
 			// Remove the user from the channel as well.
 			user.getChannel().userCount--;
 
 			host.channelUpdated(user.getChannel());
-			host.userRemoved(user.session);
+			host.userRemoved(user.session, ur.getReason());
 			break;
 		case TextMessage:
 			handleTextMessage(TextMessage.parseFrom(buffer));

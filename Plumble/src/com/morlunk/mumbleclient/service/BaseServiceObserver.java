@@ -51,7 +51,7 @@ public class BaseServiceObserver implements IServiceObserver {
 	}
 
 	@Override
-	public void onUserRemoved(final User user) throws RemoteException {
+	public void onUserRemoved(final User user, final String reason) throws RemoteException {
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public interface MumbleProtocolHost {
 
 	public void userAdded(User user);
 
-	public void userRemoved(int userId);
+	public void userRemoved(int userId, String reason);
 
 	public void userUpdated(User user);
 	

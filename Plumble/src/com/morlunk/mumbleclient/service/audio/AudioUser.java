@@ -66,10 +66,10 @@ public class AudioUser {
 		}
 
 		/* long session = */pds.readLong();
-		final long sequence = pds.readLong();
+		//final long sequence = pds.readLong();
 
 		int dataHeader;
-		int frameCount = 0;
+		//int frameCount = 0;
 
 		byte[] data = null;
 		
@@ -88,7 +88,7 @@ public class AudioUser {
 				normalBuffer.add(jbp);
 
 				readyHandler.packetReady(this);
-				frameCount++;
+				//frameCount++;
 
 			}
 		} while ((dataHeader & 0x80) > 0 && pds.isValid());

@@ -342,9 +342,6 @@ public class ServerList extends ConnectedListActivity {
 		
 		registerForContextMenu(getListView());
 
-		// FIXME: Volume settings
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
 		// Create the service observer. If such exists, onServiceBound will
 		// register it.
 		if (savedInstanceState != null) {

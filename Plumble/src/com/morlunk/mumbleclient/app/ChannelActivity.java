@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
@@ -38,6 +39,7 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.morlunk.mumbleclient.Globals;
 import com.morlunk.mumbleclient.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.Settings.PlumbleCallMode;
@@ -134,7 +136,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         	sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         	proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         }
-		
+        
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -330,6 +332,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	 * The method also takes care of making sure that its initialization code
 	 * is executed only once so calling it several times doesn't cause problems.
 	 */
+    
 	@Override
 	protected void onConnected() {
 		// We are now connected! \o/
@@ -346,6 +349,10 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			public boolean onNavigationItemSelected(final int itemPosition, long itemId) {
 				
 				new AsyncTask<Channel, Void, Void>() {
+					
+					protected void onPreExecute() {
+						
+					};
 					
 					@Override
 					protected Void doInBackground(Channel... params) {
@@ -365,6 +372,8 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 						if(settings.getLastChannel(mService.getServerId()) != channelId) {
 							settings.setLastChannel(mService.getServerId(), channelAdapter.getItem(itemPosition).id); // Cache the last channel
 						}
+						
+						mProgressDialog.dismiss();
 					}
 				}.execute(channelAdapter.getItem(itemPosition));
 				return true;
@@ -567,7 +576,11 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		}
 
 		@Override
-		public void onUserRemoved(final User user) throws RemoteException {
+		public void onUserRemoved(final User user, String reason) throws RemoteException {
+			if(user.equals(mService.getCurrentUser())) {
+				Log.i(Globals.LOG_TAG, String.format("Kicked: \"%s\"", reason));
+				mService.setError(getString(R.string.kickedMessage, reason));
+			}
 			listFragment.removeUser(user);
 		}
 

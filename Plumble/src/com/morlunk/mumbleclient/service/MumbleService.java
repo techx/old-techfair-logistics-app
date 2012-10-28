@@ -45,6 +45,7 @@ import com.morlunk.mumbleclient.service.model.User;
  * @author Rantanen
  */
 public class MumbleService extends Service {
+	
 	public class LocalBinder extends Binder {
 		public MumbleService getService() {
 			return MumbleService.this;
@@ -380,7 +381,7 @@ public class MumbleService extends Service {
 		}
 
 		@Override
-		public void userRemoved(final int userId) {
+		public void userRemoved(final int userId, final String reason) {
 			handler.post(new ServiceProtocolMessage() {
 				private User user;
 
@@ -399,7 +400,7 @@ public class MumbleService extends Service {
 				@Override
 				protected void broadcast(final IServiceObserver observer)
 					throws RemoteException {
-					observer.onUserRemoved(user);
+					observer.onUserRemoved(user, reason);
 				}
 			});
 		}
@@ -531,7 +532,6 @@ public class MumbleService extends Service {
 		// It'll notify us with DISCONNECTED when it's done.
 		this.setRecording(false);
 		if (mClient != null) {
-			
 			mClient.disconnect();
 		}
 	}
@@ -572,6 +572,8 @@ public class MumbleService extends Service {
 	}
 
 	public int getCodec() {
+		if(!isConnected()) 
+			return -1;
 		if (mProtocol.codec == MumbleProtocol.CODEC_NOCODEC) {
 			throw new IllegalStateException(
 				"Called getCodec on a connection with unsupported codec");
@@ -585,11 +587,19 @@ public class MumbleService extends Service {
 	}
 
 	public Channel getCurrentChannel() {
+		if(!isConnected()) 
+			return null;
 		return mProtocol.currentChannel;
 	}
 
 	public User getCurrentUser() {
+		if(!isConnected()) 
+			return null;
 		return mProtocol.currentUser;
+	}
+	
+	public void setError(String error) {
+		errorString = error;
 	}
 
 	public String getError() {

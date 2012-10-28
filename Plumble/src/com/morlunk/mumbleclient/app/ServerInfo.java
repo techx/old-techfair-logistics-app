@@ -1,6 +1,5 @@
 package com.morlunk.mumbleclient.app;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.EditText;
