@@ -40,7 +40,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.morlunk.mumbleclient.Globals;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.Settings.PlumbleCallMode;
 import com.morlunk.mumbleclient.service.BaseServiceObserver;

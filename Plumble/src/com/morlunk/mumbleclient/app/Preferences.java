@@ -14,7 +14,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 
 public class Preferences extends SherlockPreferenceActivity {
 	

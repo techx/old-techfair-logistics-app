@@ -15,7 +15,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 
 public class KeySelectDialogPreference extends DialogPreference implements OnKeyListener {
 	

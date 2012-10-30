@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.service.model.User;
 
 /**

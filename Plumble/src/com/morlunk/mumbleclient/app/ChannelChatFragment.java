@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.service.model.Message;
 
 public class ChannelChatFragment extends SherlockFragment {

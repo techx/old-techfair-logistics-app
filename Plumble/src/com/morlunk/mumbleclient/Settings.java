@@ -3,6 +3,7 @@ package com.morlunk.mumbleclient;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import com.techfair.tabletapp.R;
 
 public class Settings {
 	public static final String PREF_CALL_MODE = "callMode";

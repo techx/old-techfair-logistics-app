@@ -21,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.service.MumbleProtocol.MessageType;
 import com.morlunk.mumbleclient.service.MumbleService;
 import com.morlunk.mumbleclient.service.audio.AudioOutputHost;

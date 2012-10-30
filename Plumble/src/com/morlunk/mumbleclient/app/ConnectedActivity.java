@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.app.ConnectedActivityLogic.Host;
 import com.morlunk.mumbleclient.service.IServiceObserver;
 import com.morlunk.mumbleclient.service.MumbleService;

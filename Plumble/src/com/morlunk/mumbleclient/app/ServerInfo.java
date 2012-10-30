@@ -7,7 +7,7 @@ import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 
 public class ServerInfo extends SherlockActivity {
 	

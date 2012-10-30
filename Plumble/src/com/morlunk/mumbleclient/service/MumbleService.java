@@ -26,7 +26,7 @@ import android.util.Log;
 
 import com.google.protobuf.Message.Builder;
 import com.morlunk.mumbleclient.Globals;
-import com.morlunk.mumbleclient.R;
+import com.techfair.tabletapp.R;
 import com.morlunk.mumbleclient.Settings;
 import com.morlunk.mumbleclient.app.ChannelActivity;
 import com.morlunk.mumbleclient.service.MumbleProtocol.MessageType;

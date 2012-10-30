@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.morlunk.mumbleclient"
+    package="com.techfair.tabletapp"
     android:installLocation="auto"
     android:versionCode="14"
     android:versionName="1.2.2" >
@@ -19,22 +19,22 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
         <activity
-            android:name=".app.ServerList"
+            android:name="com.morlunk.mumbleclient.app.ServerList"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.ServerInfo" android:parentActivityName=".app.ServerList"/>
-        <activity android:name=".app.ChannelActivity" android:launchMode="singleInstance"/>
-        <activity android:name=".app.Preferences" android:parentActivityName=".app.ServerList"/>
+        <activity android:name="com.morlunk.mumbleclient.app.ServerInfo" android:parentActivityName=".app.ServerList"/>
+        <activity android:name="com.morlunk.mumbleclient.app.ChannelActivity" android:launchMode="singleInstance"/>
+        <activity android:name="com.morlunk.mumbleclient.app.Preferences" android:parentActivityName=".app.ServerList"/>
 
         <service
-            android:name=".service.MumbleService"
+            android:name="com.morlunk.mumbleclient.service.MumbleService"
             android:enabled="true" />
         <service
-            android:name=".service.MumbleNotificationService"
+            android:name="com.morlunk.mumbleclient.service.MumbleNotificationService"
             android:enabled="true" />
         
         <!-- Start of Crittercism.com Code -->

@@ -1,5 +1,7 @@
 package com.morlunk.mumbleclient;
 
+import com.techfair.tabletapp.R;
+
 /**
  * Constant global values
  *
