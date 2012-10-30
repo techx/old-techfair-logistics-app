@@ -11,7 +11,7 @@
 		android:layout_height="32dp"
 	    android:layout_centerVertical="true"
 		android:id="@+id/userRowState"
-		android:src="@drawable/plumble" />
+		android:src="@drawable/icon" />
 	<TextView
 		android:layout_height="wrap_content"
 		android:text="[Name]"

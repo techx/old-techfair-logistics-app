@@ -499,7 +499,7 @@ public class MumbleConnection implements Runnable {
 		in = new DataInputStream(tcpSocket.getInputStream());
 
 		final Version.Builder v = Version.newBuilder();
-		v.setRelease("Plumble");
+		v.setRelease("TechieTalkie");
 		v.setVersion(Globals.PROTOCOL_VERSION);
 		v.setOs("Android");
 		v.setOsVersion(android.os.Build.VERSION.RELEASE);

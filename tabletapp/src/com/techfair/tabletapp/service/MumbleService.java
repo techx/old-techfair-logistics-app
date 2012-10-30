@@ -896,8 +896,8 @@ public class MumbleService extends Service {
 	void showNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setSmallIcon(R.drawable.ic_stat_notify);
-		builder.setTicker("Plumble Connected");
-		builder.setContentTitle("Plumble");
+		builder.setTicker("TechieTalkie Connected");
+		builder.setContentTitle("TechieTalkie");
 		builder.setContentText("Connected.");
 		builder.setPriority(Notification.PRIORITY_HIGH);
 		

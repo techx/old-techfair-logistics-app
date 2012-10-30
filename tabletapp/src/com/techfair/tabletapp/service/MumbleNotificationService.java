@@ -41,7 +41,7 @@ public class MumbleNotificationService extends Service {
 					service.setDeafened(!service.isDeafened());
 			}
 		} else {
-			Log.i("Plumble", "Notification service: action not specified!");
+			Log.i("TechieTalkie", "Notification service: action not specified!");
 		}
 		
 		return super.onStartCommand(intent, flags, startId);

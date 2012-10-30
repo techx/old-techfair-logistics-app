@@ -19,7 +19,7 @@ import com.techfair.tabletapp.R;
 public class Preferences extends SherlockPreferenceActivity {
 	
 	private static final String CERTIFICATE_PATH_KEY = "certificatePath";
-	private static final String CERTIFICATE_FOLDER = "Plumble";
+	private static final String CERTIFICATE_FOLDER = "techietalkie";
 	private static final String CERTIFICATE_EXTENSION = "p12";
 
 	private static Context context;
