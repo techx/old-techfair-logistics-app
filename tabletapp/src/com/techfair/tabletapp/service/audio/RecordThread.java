@@ -57,6 +57,7 @@ public class RecordThread implements Runnable {
 		detectionThreshold = settings.getDetectionThreshold();
 		callMode = settings.getCallMode();
 
+		// FIXME: Fix audio bug
 		for (final int s : new int[] { 48000, 44100, 22050, 11025, 8000 }) {
 			bufferSize = AudioRecord.getMinBufferSize(
 				s,
@@ -104,6 +105,7 @@ public class RecordThread implements Runnable {
 
 	@TargetApi(11)
 	@Override
+	// FIXME: Fix audio recording bug
 	public final void run() {
 		final boolean running = true;
 		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
