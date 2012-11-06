@@ -1,3 +1,4 @@
+# OS X gitignores
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -10,7 +11,24 @@ Icon
 .Spotlight-V100
 .Trashes
 
+# Windows gitignores
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
 
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# Linux gitignores
+.*
+!.gitignore
+*~
+
+# Android gitignores
 # built application files
 *.apk
 *.ap_
@@ -28,10 +46,42 @@ gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
+
+# Java gitignores
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
+# C gitignores
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+
 # Eclipse project files
 .classpath
 .project
 
+
+# Eclipse gitignores
 *.pydevproject
 .project
 .metadata
@@ -58,3 +108,5 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+
