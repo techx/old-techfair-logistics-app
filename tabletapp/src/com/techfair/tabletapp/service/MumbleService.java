@@ -827,7 +827,8 @@ public class MumbleService extends Service {
 			username,
 			password,
 			certificatePath,
-			certificatePassword);
+			certificatePassword,
+			settings.isTcpForced());
 
 		mProtocol = new MumbleProtocol(
 			mProtocolHost,

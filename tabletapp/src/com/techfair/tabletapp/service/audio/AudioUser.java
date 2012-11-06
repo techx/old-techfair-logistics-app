@@ -66,7 +66,7 @@ public class AudioUser {
 		}
 
 		/* long session = */pds.readLong();
-		//final long sequence = pds.readLong();
+		/*final long sequence =*/ pds.readLong();
 
 		int dataHeader;
 		//int frameCount = 0;

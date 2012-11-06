@@ -22,7 +22,7 @@
 			android:layout_height="fill_parent"
 			android:id="@+id/chatTextEdit"
 			android:imeOptions="actionSend"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:hint="@string/chat_message"></EditText>
 		<Button

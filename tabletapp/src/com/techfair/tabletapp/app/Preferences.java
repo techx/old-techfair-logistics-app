@@ -50,7 +50,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	 * Updates the passed preference with the certificate paths found on external storage.
 	 * @param preference The ListPreference to update.
 	 */
-	private static void updateCertificatePath(ListPreference preference) {
+	private static void updateCertificatePath(ListPreference preference) throws NullPointerException {
 		File externalStorageDirectory = Environment.getExternalStorageDirectory();
 		File plumbleFolder = new File(externalStorageDirectory, CERTIFICATE_FOLDER);
 		
@@ -94,7 +94,18 @@ public class Preferences extends SherlockPreferenceActivity {
 			
 			addPreferencesFromResource(R.xml.preferences);
 			ListPreference certificatePathPreference = (ListPreference) findPreference(CERTIFICATE_PATH_KEY);
-			updateCertificatePath(certificatePathPreference);
+			// Make sure media is mounted, otherwise do not allow certificate loading.
+			if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				try {
+					updateCertificatePath(certificatePathPreference);
+				} catch(NullPointerException exception) {
+					certificatePathPreference.setEnabled(false);
+					certificatePathPreference.setSummary(R.string.externalStorageUnavailable);
+				}
+			} else {
+				certificatePathPreference.setEnabled(false);
+				certificatePathPreference.setSummary(R.string.externalStorageUnavailable);
+			}
 		}
 	}
 }

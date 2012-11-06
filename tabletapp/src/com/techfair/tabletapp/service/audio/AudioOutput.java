@@ -151,7 +151,10 @@ public class AudioOutput implements Runnable {
 			fillMixFrames(mix);
 
 			// If there is output, play it now if not deafened.
-			if (mix.size() > 0 && !MumbleService.getCurrentService().getCurrentUser().deafened) {
+			if (mix.size() > 0 && 
+					MumbleService.getCurrentService() != null && 
+					MumbleService.getCurrentService().getCurrentUser()!= null && 
+					!MumbleService.getCurrentService().getCurrentUser().deafened) {
 				// Mix all the frames into one array.
 				mix(out, mix);
 

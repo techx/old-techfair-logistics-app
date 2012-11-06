@@ -148,6 +148,7 @@ public class MumbleConnection implements Runnable {
 	private DatagramSocket udpSocket;
 	private long useUdpUntil;
 	boolean usingUdp = false;
+	boolean forceTcp=false;
 
 	/**
 	 * Signals disconnecting state. True if something has interrupted the normal
@@ -203,7 +204,8 @@ public class MumbleConnection implements Runnable {
 		final String username,
 		final String password,
 		final String certificatePath,
-		final String certificatePassword) {
+		final String certificatePassword,
+		final Boolean forceTcp) {
 		this.connectionHost = connectionHost;
 		this.host = host;
 		this.port = port;
@@ -211,6 +213,7 @@ public class MumbleConnection implements Runnable {
 		this.password = password;
 		this.certificatePath = certificatePath;
 		this.certificatePassword = certificatePassword;
+		this.forceTcp = forceTcp;
 		
 		connectionHost.setConnectionState(MumbleConnectionHost.STATE_CONNECTING);
 	}

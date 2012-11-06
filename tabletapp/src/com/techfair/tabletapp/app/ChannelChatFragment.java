@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,17 +107,18 @@ public class ChannelChatFragment extends SherlockFragment {
 	}
 
 	void addMessage(final Message msg) {
-		final StringBuilder sb = new StringBuilder();
+		final SpannableStringBuilder sb = new SpannableStringBuilder();
 		sb.append("[");
 		sb.append(DateUtils.formatDateTime(
 			getActivity(),
 			msg.timestamp,
 			DateUtils.FORMAT_SHOW_TIME));
-		sb.append("]");
+		sb.append("] ");
 
 		if (msg.direction == Message.DIRECTION_SENT) {
 			sb.append("To ");
 			sb.append(msg.channel.name);
+			sb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.abs__holo_blue_light)), sb.length()-msg.channel.name.length(), sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		} else {
 			if (msg.channelIds > 0) {
 				sb.append("(C) ");
@@ -124,18 +127,19 @@ public class ChannelChatFragment extends SherlockFragment {
 				sb.append("(T) ");
 			}
 
-			if (msg.actor != null) {
-				sb.append(msg.actor.name);
-			} else {
-				sb.append("Server");
-			}
+			String actorName = msg.actor.name;
+			
+			if(actorName == null)
+				actorName = "Server";
+			
+			sb.append(actorName);
+			sb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.abs__holo_blue_light)), sb.length()-actorName.length(), sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		sb.append(": ");
-		sb.append(msg.message);
-		sb.append("<br>");
+		sb.append(Html.fromHtml(msg.message));
+		sb.append(Html.fromHtml("<br>"));
 		
-		Spanned htmlString = Html.fromHtml(sb.toString());
-		chatText.append(htmlString);
+		chatText.append(sb);
 	}
 
 	void sendMessage(final TextView v) {

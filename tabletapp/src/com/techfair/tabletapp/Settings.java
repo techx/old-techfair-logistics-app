@@ -38,11 +38,25 @@ public class Settings {
 	public static final String PREF_LAST_CHANNEL = "lastChannels";
 	public static final String LAST_CHANNEL_PREFIX = "lastChannel_"; // TODO move this to db code or something. It's messy as hell.
 
+	public static final String PREF_CHANNELLIST_ROW_HEIGHT = "channellistrowheight";
+	public static final String DEFAULT_CHANNELLIST_ROW_HEIGHT = "35";
+
+	public static final String PREF_COLORIZE_CHANNELLIST = "colorizechannellist";
+	public static final Boolean DEFAULT_COLORIZE_CHANNELLIST = false;
+
+	public static final String PREF_COLORIZE_THRESHOLD = "colorthresholdnumusers";
+	public static final String DEFAULT_COLORIZE_THRESHOLD = "5";
+	
+	public static final String PREF_FORCE_TCP = "forceTcp";
+	public static final Boolean DEFAULT_FORCE_TCP = false;
+	
 	private final SharedPreferences preferences;
 
 	public Settings(final Context ctx) {
 		preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
+	
+	
 	
 	public PlumbleCallMode getCallMode() {
 		String callModeValue = preferences.getString(PREF_CALL_MODE, ARRAY_CALL_MODE_SPEAKER);
@@ -94,5 +108,25 @@ public class Settings {
 	public void setLastChannel(int serverId, int channelId) {
 		preferences.edit()
 		.putInt(String.format("%s%d", LAST_CHANNEL_PREFIX, serverId), channelId).commit();
+	}
+	
+	public int getChannelListRowHeight() {
+		return Integer.parseInt(preferences.getString(
+				PREF_CHANNELLIST_ROW_HEIGHT,
+				DEFAULT_CHANNELLIST_ROW_HEIGHT));
+	}
+
+	public Boolean getChannellistColorized() {
+		return preferences.getBoolean(Settings.PREF_COLORIZE_CHANNELLIST,
+				DEFAULT_COLORIZE_CHANNELLIST);
+	}
+
+	public int getColorizeThreshold() {
+		return Integer.parseInt(preferences.getString(
+				Settings.PREF_COLORIZE_THRESHOLD, DEFAULT_COLORIZE_THRESHOLD));
+	}
+	
+	public boolean isTcpForced() {
+		return preferences.getBoolean(PREF_FORCE_TCP, false);
 	}
 }

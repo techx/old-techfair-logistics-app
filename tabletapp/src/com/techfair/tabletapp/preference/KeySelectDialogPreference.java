@@ -5,6 +5,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.DialogInterface.OnClickListener;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -33,6 +34,14 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 		super.onPrepareDialogBuilder(builder);
 		
 		builder.setOnKeyListener(this);
+		builder.setNeutralButton(R.string.reset_key, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				keyCode = 0;
+				valueTextView.setText("No Key");
+			}
+		});
 	}
 	
 	@Override
@@ -87,10 +96,14 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	@Override
 	protected void onBindDialogView(View view) {
 		super.onBindDialogView(view);
-		if(android.os.Build.VERSION.SDK_INT >= 12) {
-			valueTextView.setText(KeyEvent.keyCodeToString(keyCode));
+		if(keyCode == 0) {
+			valueTextView.setText("No Key");
 		} else {
-			valueTextView.setText("Key code: "+keyCode);
+			if(android.os.Build.VERSION.SDK_INT >= 12) {
+				valueTextView.setText(KeyEvent.keyCodeToString(keyCode));
+			} else {
+				valueTextView.setText("Key code: "+keyCode);
+			}
 		}
 	}
 
@@ -99,6 +112,7 @@ public class KeySelectDialogPreference extends DialogPreference implements OnKey
 	public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 		if(keyCode != KeyEvent.KEYCODE_BACK) {
 			this.keyCode = keyCode;
+			
 			if(android.os.Build.VERSION.SDK_INT >= 12) {
 				valueTextView.setText(KeyEvent.keyCodeToString(keyCode));
 			} else {

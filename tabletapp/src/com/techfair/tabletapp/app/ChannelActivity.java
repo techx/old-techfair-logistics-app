@@ -3,18 +3,21 @@ package com.techfair.tabletapp.app;
 import java.util.List;
 
 import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +29,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -136,10 +140,6 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         	sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         	proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         }
-		
-        // Create the adapter that will return a fragment for each of the three primary sections
-        // of the app.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -169,7 +169,20 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 				this.visibleChannel = channel;
 			}
 			
-			if(savedInstanceState.containsKey(ChannelListFragment.class.getName()) &&
+        }
+        
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        
+        // If view pager is present, configure phone UI.
+        if(mViewPager != null) {
+            // Create the adapter that will return a fragment for each of the three primary sections
+            // of the app.
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            // Set up the ViewPager with the sections adapter.
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+        	
+            if(savedInstanceState != null &&
+            		savedInstanceState.containsKey(ChannelListFragment.class.getName()) &&
 					savedInstanceState.containsKey(ChannelChatFragment.class.getName())) {
 				// Load existing fragments
 				listFragment = (ChannelListFragment) getSupportFragmentManager().getFragment(savedInstanceState, ChannelListFragment.class.getName());
@@ -179,16 +192,11 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		        listFragment = new ChannelListFragment();
 		        chatFragment = new ChannelChatFragment();
 			}
-			
         } else {
-	        // Create fragments
-	        listFragment = new ChannelListFragment();
-	        chatFragment = new ChannelChatFragment();
-		}
-        
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        	// Otherwise, create tablet UI.
+	        listFragment = (ChannelListFragment) getSupportFragmentManager().findFragmentById(R.id.list_fragment);
+	        chatFragment = (ChannelChatFragment) getSupportFragmentManager().findFragmentById(R.id.chat_fragment);
+        }
 
         /*
          * Removed tab code as you are unable to have both tabs and list navigation modes. Use pager only for now.
@@ -715,13 +723,25 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 		public View getDropDownView(int position, View convertView,
 				ViewGroup parent) {
 			View view = convertView;
-			if(convertView == null) {
-				view = getLayoutInflater().inflate(R.layout.nested_dropdown_item, parent, false);
-			}
-			
-			DisplayMetrics metrics = getResources().getDisplayMetrics();
 			
 			Channel channel = getItem(position);
+			
+			DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+			// Use rowHeight provided by settings, convert to dp.
+			int rowHeight = settings.getChannelListRowHeight();
+			int rowHeightDp = (int)(rowHeight * metrics.density + 0.5f);
+
+			if (convertView == null) {
+				view = getLayoutInflater().inflate(R.layout.nested_dropdown_item, parent, false);
+
+				// set the height to layout, image and textview
+				LayoutParams v_params = view
+						.getLayoutParams();
+				v_params.height = rowHeightDp;
+				view.setLayoutParams(v_params);
+			}
+
 			
 			ImageView returnImage = (ImageView) view.findViewById(R.id.return_image);
 			
@@ -729,20 +749,40 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 			// Width of return arrow is 50dp, convert that to px.
 			if(channel.parent != -1) {
 				returnImage.setVisibility(View.VISIBLE);
-				view.setPadding((int)(getNestedLevel(channel)*TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, metrics)), 
-						0, 
-						(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
-						0);
+				view.setPadding((int) (getNestedLevel(channel) * TypedValue
+						.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25,
+								metrics)), 0, (int) TypedValue.applyDimension(
+						TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 0);
 			} else {
 				returnImage.setVisibility(View.GONE);
-				view.setPadding((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
-						0, 
-						(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 
-						0);
+				view.setPadding((int) TypedValue.applyDimension(
+						TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 0,
+						(int) TypedValue.applyDimension(
+								TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 0);
 			}
 			
 			TextView spinnerTitle = (TextView) view.findViewById(R.id.channel_name);
-			spinnerTitle.setText(channel.name+" ("+channel.userCount+")");
+			spinnerTitle.setText(channel.name);
+
+			// colorize root elements, channels with users, channels with many
+			// users
+			if (settings.getChannellistColorized()) {
+				if (channel.parent == 0) {
+					spinnerTitle.setTextColor(Color.YELLOW);
+				} else if (channel.userCount > 0
+						&& channel.userCount < settings.getColorizeThreshold()) {
+					spinnerTitle.setTextColor(Color.CYAN);
+				} else if (channel.userCount >= settings.getColorizeThreshold()) {
+					spinnerTitle.setTextColor(Color.RED);
+				} else {
+					spinnerTitle.setTextColor(Color.WHITE);
+				}
+			}
+			
+			TextView spinnerCount = (TextView) view.findViewById(R.id.channel_count);
+			spinnerCount.setText("(" + channel.userCount + ")");
+			spinnerCount.setTextColor(getResources().getColor(
+			channel.userCount > 0 ? R.color.abs__holo_blue_light : R.color.abs__primary_text_holo_dark));
 			
 			return view;
 		}

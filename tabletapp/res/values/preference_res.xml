@@ -34,6 +34,19 @@
 	    <item>voice</item>
 	</string-array>
 
+	<string-array name="rowheightText">
+		<item>Slim</item>
+		<item>Medium</item>
+		<item>Larger</item>
+		<item>Very Large</item>
+	</string-array>
+	<string-array name="rowheightValues">
+		<item>30</item>
+		<item>35</item>
+		<item>40</item>
+		<item>50</item>
+	</string-array>
+	
 	<string name="authentication">Authentication</string>
 	<string name="certificateFile">Certificate File</string>
 	<string name="certificateFileSum">The path of the P12 certificate you wish to use, placed in the \&quot;techietalkie\&quot; folder on external storage.</string>
@@ -54,4 +67,10 @@
 	<string name="advancedAudio">Advanced Audio</string>
 	<string name="audioQuality">Audio quality</string>
 	<string name="noCert">No Certificate</string>
+		<string name="rowheight">Channel Row Height</string>
+	<string name="rowheightSum">The height of a row in channel selection.</string>
+	<string name="colorizechannels">Colorize channels</string>
+	<string name="colorizechannelsSum">Whether to use color to highlight root channels and active channels.</string>
+	<string name="colorthreshold">Secondary Color Threshold</string>
+	<string name="colorthresholdSum">If this number of users is reached in a channel, the channel name appears red.</string>
 </resources>
