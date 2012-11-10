@@ -1,14 +1,15 @@
 package com.techfair.tabletapp.app;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.mumble.MumbleProto.PermissionDenied.DenyType;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -17,7 +18,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
@@ -47,11 +47,13 @@ import com.techfair.tabletapp.Globals;
 import com.techfair.tabletapp.R;
 import com.techfair.tabletapp.Settings;
 import com.techfair.tabletapp.Settings.PlumbleCallMode;
+import com.techfair.tabletapp.app.db.DbAdapter;
+import com.techfair.tabletapp.app.db.Favourite;
 import com.techfair.tabletapp.service.BaseServiceObserver;
+import com.techfair.tabletapp.service.IServiceObserver;
 import com.techfair.tabletapp.service.model.Channel;
 import com.techfair.tabletapp.service.model.Message;
 import com.techfair.tabletapp.service.model.User;
-import com.techfair.tabletapp.service.IServiceObserver;
 
 
 /**
@@ -273,6 +275,12 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		case R.id.menu_deafen_button:
 			mService.setDeafened(!mService.isDeafened());
 			return true;
+		case R.id.menu_favorite_button:
+			toggleFavourite(getChannel());
+			return true;
+		case R.id.menu_view_favorites_button:
+			showFavouritesDialog();
+			return true;
 		case R.id.menu_disconnect_item:
 			new Thread(new Runnable() {
 				
@@ -462,6 +470,82 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		}
 	}
 	
+	private void toggleFavourite(Channel channel) {
+		DbAdapter dbAdapter = new DbAdapter(this);
+		dbAdapter.open();
+		
+		Favourite currentFavourite = null;
+		
+		for(Favourite favourite : dbAdapter.fetchAllFavourites()) {
+			if(favourite.getChannelId() == channel.id) {
+				currentFavourite = favourite;
+			}
+		}
+		
+		if(currentFavourite == null) {
+			dbAdapter.createFavourite(mService.getServerId(), channel.id);
+			Toast.makeText(this, R.string.favouriteAdded, Toast.LENGTH_SHORT).show();
+		} else {
+			dbAdapter.deleteFavourite(currentFavourite.getId());
+			Toast.makeText(this, R.string.favouriteRemoved, Toast.LENGTH_SHORT).show();
+		}
+		
+		dbAdapter.close();
+	}
+	
+	private void showFavouritesDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		DbAdapter dbAdapter = new DbAdapter(this);
+		
+		dbAdapter.open();
+		List<Favourite> favourites = dbAdapter.fetchAllFavourites();
+		dbAdapter.close();
+		
+		List<CharSequence> items = new ArrayList<CharSequence>();
+		final List<Favourite> activeFavourites = new ArrayList<Favourite>(favourites);
+		
+		for(Favourite favourite : favourites) {
+			int channelId = favourite.getChannelId();
+			Channel channel = findChannelById(channelId);
+			
+			if(channel != null) {
+				items.add(channel.name);
+			} else {
+				// TODO remove the favourite from DB here if channel is not found.
+				activeFavourites.remove(favourite);
+			}
+		}
+		
+		builder.setTitle(R.string.favorites);
+		builder.setItems(items.toArray(new CharSequence[items.size()]), new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Favourite favourite = activeFavourites.get(which);
+				final Channel channel = findChannelById(favourite.getChannelId());
+				
+				new AsyncTask<Channel, Void, Void>() {
+					
+					@Override
+					protected Void doInBackground(Channel... params) {
+						mService.joinChannel(params[0].id);
+						return null;
+					}
+					
+					@Override
+					protected void onPostExecute(Void result) {
+						super.onPostExecute(result);
+						setChannel(channel);
+						getSupportActionBar().setSelectedNavigationItem(mService.getSortedChannelList().indexOf(channel));
+					}
+				}.execute(channel);
+			}
+		});
+				
+		builder.show();
+	}
+	
 	public void setChannel(Channel channel) {
 		this.visibleChannel = channel;
 		listFragment.updateChannel();
@@ -473,6 +557,19 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	@Override
 	public Channel getChannel() {
 		return visibleChannel;
+	}
+	
+	/**
+	 * Looks through the list of channels and returns a channel with the passed ID. Returns null if not found.
+	 */
+	public Channel findChannelById(int channelId) {
+		List<Channel> channels = mService.getChannelList();
+		for(Channel channel : channels) {
+			if(channel.id == channelId) {
+				return channel;
+			}
+		}
+		return null;
 	}
 	
 	/* (non-Javadoc)
@@ -723,7 +820,7 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 		public View getDropDownView(int position, View convertView,
 				ViewGroup parent) {
 			View view = convertView;
-			
+
 			Channel channel = getItem(position);
 			
 			DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -742,12 +839,12 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 				view.setLayoutParams(v_params);
 			}
 
-			
 			ImageView returnImage = (ImageView) view.findViewById(R.id.return_image);
-			
-			// Show 'return' arrow and pad the view depending on channel's nested level.
+
+			// Show 'return' arrow and pad the view depending on channel's
+			// nested level.
 			// Width of return arrow is 50dp, convert that to px.
-			if(channel.parent != -1) {
+			if (channel.parent != -1) {
 				returnImage.setVisibility(View.VISIBLE);
 				view.setPadding((int) (getNestedLevel(channel) * TypedValue
 						.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25,
@@ -760,7 +857,7 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 						(int) TypedValue.applyDimension(
 								TypedValue.COMPLEX_UNIT_DIP, 15, metrics), 0);
 			}
-			
+
 			TextView spinnerTitle = (TextView) view.findViewById(R.id.channel_name);
 			spinnerTitle.setText(channel.name);
 
@@ -783,7 +880,7 @@ class ChannelSpinnerAdapter implements SpinnerAdapter {
 			spinnerCount.setText("(" + channel.userCount + ")");
 			spinnerCount.setTextColor(getResources().getColor(
 			channel.userCount > 0 ? R.color.abs__holo_blue_light : R.color.abs__primary_text_holo_dark));
-			
+
 			return view;
 		}
 		

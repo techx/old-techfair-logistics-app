@@ -1,5 +1,7 @@
 package com.techfair.tabletapp.app;
 
+import java.util.List;
+
 import junit.framework.Assert;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,8 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.database.Cursor;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +28,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.techfair.tabletapp.Globals;
 import com.techfair.tabletapp.R;
+import com.techfair.tabletapp.app.db.DbAdapter;
+import com.techfair.tabletapp.app.db.Server;
 import com.techfair.tabletapp.service.BaseServiceObserver;
 import com.techfair.tabletapp.service.MumbleService;
 
@@ -41,30 +43,29 @@ import com.techfair.tabletapp.service.MumbleService;
  *
  */
 public class ServerList extends ConnectedListActivity {
-	private class ServerAdapter extends BaseAdapter {
-		private final Context context;
-		private final Cursor cursor;
+	private class ServerAdapter extends ArrayAdapter<Server> {
+		private Context context;
+		private List<Server> servers;
 
-		public ServerAdapter(final Context context_, final DbAdapter dbAdapter_) {
-			context = context_;
-			cursor = dbAdapter_.fetchAllServers();
-			startManagingCursor(cursor);
+		public ServerAdapter(Context context, List<Server> servers) {
+			super(context, android.R.id.text1, servers);
+			this.context = context;
+			this.servers = servers;
 		}
 
 		@Override
 		public final int getCount() {
-			return cursor.getCount();
+			return servers.size();
 		}
-
+		
 		@Override
-		public final Object getItem(final int position) {
-			return getItemId(position);
+		public Server getItem(int position) {
+			return servers.get(position);
 		}
-
+		
 		@Override
-		public final long getItemId(final int position) {
-			cursor.moveToPosition(position);
-			return cursor.getLong(cursor.getColumnIndexOrThrow(DbAdapter.SERVER_COL_ID));
+		public long getItemId(int position) {
+			return getItem(position).getId();
 		}
 
 		@Override
@@ -72,31 +73,30 @@ public class ServerList extends ConnectedListActivity {
 			final int position,
 			final View v,
 			final ViewGroup parent) {
-			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			final View row = inflater.inflate(
-				android.R.layout.simple_list_item_2,
-				null);
+			View view = v;
+			
+			if(v == null) {
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(
+					android.R.layout.simple_list_item_2,
+					null);
+			}
+			
+			Server server = getItem(position);
 
-			final TextView nameText = (TextView) row.findViewById(android.R.id.text1);
-			final TextView userText = (TextView) row.findViewById(android.R.id.text2);
+			TextView nameText = (TextView) view.findViewById(android.R.id.text1);
+			TextView userText = (TextView) view.findViewById(android.R.id.text2);
 
-			cursor.moveToPosition(position);
-
-			final String serverName = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.SERVER_COL_NAME));
-			final String serverHost = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.SERVER_COL_HOST));
-			final int serverPort = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PORT));
-			final String serverUsername = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.SERVER_COL_USERNAME));
-
-			if ("".equals(serverName)) {
-				nameText.setText(serverHost + ":" + serverPort);
-				userText.setText(serverUsername);
+			if(server.getName().equals("")) {
+				nameText.setText(server.getHost() + ":" + server.getPort());
+				userText.setText(server.getUsername());
 			} else {
-				nameText.setText(serverName);
-				userText.setText(serverUsername + "@" + serverHost + ":" +
-								 serverPort);
+				nameText.setText(server.getName());
+				userText.setText(server.getUsername() + "@" + server.getHost() + ":" +
+								 server.getPort());
 			}
 
-			return row;
+			return view;
 		}
 	}
 
@@ -113,13 +113,12 @@ public class ServerList extends ConnectedListActivity {
 
 	private static final int ACTIVITY_ADD_SERVER = 0;
 	private static final int ACTIVITY_CHANNEL_LIST = 1;
-	private static final int DIALOG_DELETE_SERVER = 0;
 
 	private static final int MENU_EDIT_SERVER = Menu.FIRST;
 	private static final int MENU_DELETE_SERVER = Menu.FIRST + 1;
 	private static final int MENU_CONNECT_SERVER = Menu.FIRST + 2;
 
-	private static final String STATE_WAIT_CONNECTION = "com.techfair.tabletapp	.ServerList.WAIT_CONNECTION";
+	private static final String STATE_WAIT_CONNECTION = "com.techfair.tabletapp.ServerList.WAIT_CONNECTION";
 
 	private ServerServiceObserver mServiceObserver;
 	
@@ -142,7 +141,7 @@ public class ServerList extends ConnectedListActivity {
 			return true;
 		case MENU_DELETE_SERVER:
 			serverToDeleteId = info.id;
-			showDialog(DIALOG_DELETE_SERVER);
+			createDeleteServerDialog().show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -159,10 +158,10 @@ public class ServerList extends ConnectedListActivity {
 		final int menuPosition = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
 		final int serverId = (int) getListView().getItemIdAtPosition(
 			menuPosition);
-		final Cursor c = dbAdapter.fetchServer(serverId);
-		final String name = getServerName(c);
-		c.close();
-		menu.setHeaderTitle(name);
+		
+		Server server = dbAdapter.fetchServer(serverId);
+		
+		menu.setHeaderTitle(server.getName());
 
 		menu.add(0, MENU_CONNECT_SERVER, 1, "Connect").setIcon(
 			android.R.drawable.ic_menu_view);
@@ -193,6 +192,7 @@ public class ServerList extends ConnectedListActivity {
 			return super.onMenuItemSelected(featureId, item);
 		}
 	}
+	
 
 	private void addServer() {
 		final Intent i = new Intent(this, ServerInfo.class);
@@ -257,17 +257,7 @@ public class ServerList extends ConnectedListActivity {
 		i.putExtra("serverId", id);
 		startActivityForResult(i, ACTIVITY_ADD_SERVER);
 	}
-
-	private String getServerName(final Cursor c) {
-		String name = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_NAME));
-		if ("".equals(name)) {
-			final String host = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_HOST));
-			final int port = c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PORT));
-			name = host + ":" + port;
-		}
-		return name;
-	}
-
+	
 	private void registerConnectionReceiver() {
 		if (mServiceObserver != null) {
 			return;
@@ -298,23 +288,18 @@ public class ServerList extends ConnectedListActivity {
 	 * @param id
 	 */
 	protected final void connectServer(final long id) {
-		final Cursor c = dbAdapter.fetchServer(id);
-		final int serverId = c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_ID));
-		final String host = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_HOST));
-		final int port = c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PORT));
-		final String username = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_USERNAME));
-		final String password = c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PASSWORD));
-		c.close();
+		Server server = dbAdapter.fetchServer(id);
 
 		registerConnectionReceiver();
 
+		// TODO make 'Server' parcelable and send that instead
 		final Intent connectionIntent = new Intent(this, MumbleService.class);
 		connectionIntent.setAction(MumbleService.ACTION_CONNECT);
-		connectionIntent.putExtra(MumbleService.EXTRA_SERVER_ID, serverId);
-		connectionIntent.putExtra(MumbleService.EXTRA_HOST, host);
-		connectionIntent.putExtra(MumbleService.EXTRA_PORT, port);
-		connectionIntent.putExtra(MumbleService.EXTRA_USERNAME, username);
-		connectionIntent.putExtra(MumbleService.EXTRA_PASSWORD, password);
+		connectionIntent.putExtra(MumbleService.EXTRA_SERVER_ID, server.getId());
+		connectionIntent.putExtra(MumbleService.EXTRA_HOST, server.getHost());
+		connectionIntent.putExtra(MumbleService.EXTRA_PORT, server.getPort());
+		connectionIntent.putExtra(MumbleService.EXTRA_USERNAME, server.getUsername());
+		connectionIntent.putExtra(MumbleService.EXTRA_PASSWORD, server.getPassword());
 		startService(connectionIntent);
 	}
 
@@ -330,7 +315,15 @@ public class ServerList extends ConnectedListActivity {
 	@Override
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-				
+		
+		boolean debuggable =  ( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) );
+		
+		if(!debuggable) {
+			// TODO: Implement some sort of statistics/error tracking?
+		} else {
+			Log.i(Globals.LOG_TAG, "Crittercism disabled in debug build.");
+		}
+		
 		setContentView(R.layout.main);
 		
 		registerForContextMenu(getListView());
@@ -345,19 +338,6 @@ public class ServerList extends ConnectedListActivity {
 		dbAdapter.open();
 
 		fillList();
-	}
-
-	@Override
-	protected final Dialog onCreateDialog(final int id) {
-		Dialog d;
-		switch (id) {
-		case DIALOG_DELETE_SERVER:
-			d = createDeleteServerDialog();
-			break;
-		default:
-			d = null;
-		}
-		return d;
 	}
 
 	@Override
@@ -419,7 +399,7 @@ public class ServerList extends ConnectedListActivity {
 		}
 	}
 
-	void fillList() {
-		setListAdapter(new ServerAdapter(this, dbAdapter));
+	private void fillList() {
+		setListAdapter(new ServerAdapter(this, dbAdapter.fetchAllServers()));
 	}
 }

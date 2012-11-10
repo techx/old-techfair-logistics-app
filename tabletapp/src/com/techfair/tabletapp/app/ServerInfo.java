@@ -1,6 +1,5 @@
 package com.techfair.tabletapp.app;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.EditText;
 
@@ -8,6 +7,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.techfair.tabletapp.R;
+import com.techfair.tabletapp.app.db.DbAdapter;
+import com.techfair.tabletapp.app.db.Server;
 
 public class ServerInfo extends SherlockActivity {
 	
@@ -62,13 +63,14 @@ public class ServerInfo extends SherlockActivity {
 
 			final DbAdapter db = new DbAdapter(this);
 			db.open();
-			final Cursor c = db.fetchServer(serverId);
-			nameEdit.setText(c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_NAME)));
-			hostEdit.setText(c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_HOST)));
-			portEdit.setText(Integer.toString(c.getInt(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PORT))));
-			usernameEdit.setText(c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_USERNAME)));
-			passwordEdit.setText(c.getString(c.getColumnIndexOrThrow(DbAdapter.SERVER_COL_PASSWORD)));
-			c.close();
+			
+			Server server = db.fetchServer(serverId);
+			nameEdit.setText(server.getName());
+			hostEdit.setText(server.getHost());
+			portEdit.setText(server.getPort());
+			usernameEdit.setText(server.getUsername());
+			passwordEdit.setText(server.getPassword());
+			
 			db.close();
 		}
 	}

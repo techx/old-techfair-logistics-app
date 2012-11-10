@@ -15,7 +15,6 @@ import net.sf.mumble.MumbleProto.ServerSync;
 import net.sf.mumble.MumbleProto.TextMessage;
 import net.sf.mumble.MumbleProto.UserRemove;
 import net.sf.mumble.MumbleProto.UserState;
-import net.sf.mumble.MumbleProto.Reject.RejectType;
 import android.content.Context;
 import android.util.Log;
 
