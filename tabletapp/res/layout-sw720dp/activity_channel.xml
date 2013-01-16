@@ -11,10 +11,10 @@
     tools:context=".ChannelActivity" >
 
     <LinearLayout
-        android:id="@+id/l"
+        android:id="@+id/ll"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:divider="?android:attr/dividerVertical"
         android:orientation="vertical"
         android:showDividers="middle" >
@@ -24,14 +24,14 @@
             android:name="com.techfair.tabletapp.app.remotedb.TaskFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="3" />
 
         <fragment
             android:id="@+id/list_fragment"
             android:name="com.techfair.tabletapp.app.ChannelListFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
     </LinearLayout>
 
     <LinearLayout

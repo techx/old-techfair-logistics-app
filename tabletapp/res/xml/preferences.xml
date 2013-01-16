@@ -14,7 +14,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/audioInput" >
         <ListPreference
-            android:defaultValue="voiceActivity"
+            android:defaultValue="ptt"
             android:entries="@array/audioInputNames"
             android:entryValues="@array/audioInputValues"
             android:key="audioInputMethod"
@@ -57,6 +57,7 @@
             android:key="channellistrowheight"
             android:summary="@string/rowheightSum"
             android:title="@string/rowheight" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="colorizechannellist"
@@ -75,8 +76,14 @@
             android:defaultValue="60000"
             android:inputType="number"
             android:key="quality"
-            android:title="@string/audioQuality" android:summary="@string/audioQualitySum"/>
-        <CheckBoxPreference android:key="forceTcp" android:title="@string/forceTcp" android:summary="@string/forceTcpSum" android:defaultValue="false"/>
+            android:summary="@string/audioQualitySum"
+            android:title="@string/audioQuality" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="forceTcp"
+            android:summary="@string/forceTcpSum"
+            android:title="@string/forceTcp" />
     </PreferenceCategory>
 
 </PreferenceScreen>

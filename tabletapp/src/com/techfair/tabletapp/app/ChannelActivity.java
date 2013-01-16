@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
@@ -49,6 +50,7 @@ import com.techfair.tabletapp.Settings;
 import com.techfair.tabletapp.Settings.PlumbleCallMode;
 import com.techfair.tabletapp.app.db.DbAdapter;
 import com.techfair.tabletapp.app.db.Favourite;
+import com.techfair.tabletapp.app.remotedb.TaskFragment;
 import com.techfair.tabletapp.service.BaseServiceObserver;
 import com.techfair.tabletapp.service.IServiceObserver;
 import com.techfair.tabletapp.service.model.Channel;
@@ -94,6 +96,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 	// Fragments
 	private ChannelListFragment listFragment;
 	private ChannelChatFragment chatFragment;
+	private TaskFragment taskFragment;
 	
 	// Proximity sensor
 	private SensorManager sensorManager;
@@ -183,21 +186,26 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
             // Set up the ViewPager with the sections adapter.
             mViewPager.setAdapter(mSectionsPagerAdapter);
         	
-            if(savedInstanceState != null &&
-            		savedInstanceState.containsKey(ChannelListFragment.class.getName()) &&
-					savedInstanceState.containsKey(ChannelChatFragment.class.getName())) {
-				// Load existing fragments
-				listFragment = (ChannelListFragment) getSupportFragmentManager().getFragment(savedInstanceState, ChannelListFragment.class.getName());
-				chatFragment = (ChannelChatFragment) getSupportFragmentManager().getFragment(savedInstanceState, ChannelChatFragment.class.getName());
-			} else {
-		        // Create fragments
-		        listFragment = new ChannelListFragment();
-		        chatFragment = new ChannelChatFragment();
-			}
+           if(savedInstanceState != null &&
+                  savedInstanceState.containsKey(ChannelListFragment.class.getName()) &&
+                  savedInstanceState.containsKey(ChannelChatFragment.class.getName()) &&
+                  savedInstanceState.containsKey(TaskFragment.class.getName())) {
+               // Load existing fragments
+               listFragment = (ChannelListFragment) getSupportFragmentManager().getFragment(savedInstanceState, ChannelListFragment.class.getName());
+               chatFragment = (ChannelChatFragment) getSupportFragmentManager().getFragment(savedInstanceState, ChannelChatFragment.class.getName());
+               taskFragment = (TaskFragment) getSupportFragmentManager().getFragment(savedInstanceState, TaskFragment.class.getName());
+           } else {
+               // Create fragments
+               listFragment = new ChannelListFragment();
+               chatFragment = new ChannelChatFragment();
+               taskFragment = new TaskFragment();
+           }
+
         } else {
         	// Otherwise, create tablet UI.
 	        listFragment = (ChannelListFragment) getSupportFragmentManager().findFragmentById(R.id.list_fragment);
 	        chatFragment = (ChannelChatFragment) getSupportFragmentManager().findFragmentById(R.id.chat_fragment);
+	        taskFragment = ((TaskFragment) getSupportFragmentManager().findFragmentById(R.id.task_fragment));
         }
 
         /*
@@ -233,6 +241,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
     	super.onSaveInstanceState(outState);
     	getSupportFragmentManager().putFragment(outState, ChannelListFragment.class.getName(), listFragment);
     	getSupportFragmentManager().putFragment(outState, ChannelChatFragment.class.getName(), chatFragment);
+        getSupportFragmentManager().putFragment(outState, TaskFragment.class.getName(), taskFragment);
 		outState.putParcelable(SAVED_STATE_VISIBLE_CHANNEL, visibleChannel);
     }
     
@@ -275,12 +284,10 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 		case R.id.menu_deafen_button:
 			mService.setDeafened(!mService.isDeafened());
 			return true;
-		case R.id.menu_favorite_button:
-			toggleFavourite(getChannel());
-			return true;
-		case R.id.menu_view_favorites_button:
-			showFavouritesDialog();
-			return true;
+        case R.id.menu_preferences:
+            final Intent prefs = new Intent(this, Preferences.class);
+            startActivity(prefs);
+            return true;
 		case R.id.menu_disconnect_item:
 			new Thread(new Runnable() {
 				
@@ -611,7 +618,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 			float distance = event.values[0];
 			setVisible(event.sensor.getMaximumRange() == distance);
 		}
-	}
+	}  
 	
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
@@ -630,6 +637,8 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
 				return listFragment;
 			case 1:
 				return chatFragment;
+			case 2:
+			    return taskFragment;
 			default:
 				return null;
 			}

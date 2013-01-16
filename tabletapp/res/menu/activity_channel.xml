@@ -1,6 +1,26 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/menu_mute_button" android:title="@string/mute" android:showAsAction="ifRoom" android:icon="@drawable/microphone"></item><item android:id="@+id/menu_deafen_button" android:title="@string/deafen" android:showAsAction="ifRoom" android:icon="@drawable/ic_headphones"></item><item android:id="@+id/menu_favorite_button" android:title="@string/favorite" android:icon="@drawable/ic_action_favorite_off" android:showAsAction="ifRoom"></item><item android:id="@+id/menu_view_favorites_button" android:title="@string/viewFavorites"></item><item android:id="@+id/menu_disconnect_item" android:showAsAction="never" android:icon="@drawable/disconnect" android:title="@string/disconnect"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    
-    
+    <item
+        android:id="@+id/menu_mute_button"
+        android:icon="@drawable/microphone"
+        android:showAsAction="ifRoom"
+        android:title="@string/mute">
+    </item>
+    <item
+        android:id="@+id/menu_deafen_button"
+        android:icon="@drawable/ic_headphones"
+        android:showAsAction="ifRoom"
+        android:title="@string/deafen">
+    </item>
+    <item
+        android:id="@+id/menu_disconnect_item"
+        android:icon="@drawable/disconnect"
+        android:showAsAction="never"
+        android:title="@string/disconnect">
+    </item>
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/preferences">
+    </item>
+
 </menu>
