@@ -1,5 +1,5 @@
 
-package com.techfair.tabletapp.app.remotedb;
+package com.techfair.tabletapp.app;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;

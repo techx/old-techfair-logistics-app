@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/authentication" >
-        <ListPreference
-            android:key="certificatePath"
-            android:summary="@string/certificateFileSum"
-            android:title="@string/certificateFile" />
-
-        <EditTextPreference
-            android:key="certificatePassword"
-            android:summary="@string/certificatePasswordSum"
-            android:title="@string/certificatePassword" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/audioInput" >
         <ListPreference
             android:defaultValue="ptt"
@@ -20,14 +9,6 @@
             android:key="audioInputMethod"
             android:summary="@string/audioInputMethodSum"
             android:title="@string/audioInputMethod" />
-        <ListPreference
-            android:defaultValue="speakerphone"
-            android:dialogTitle="@string/callMode"
-            android:entries="@array/callModeNames"
-            android:entryValues="@array/callModeValues"
-            android:key="callMode"
-            android:summary="@string/callModeSum"
-            android:title="@string/callMode" />
 
         <com.techfair.tabletapp.preference.SeekBarDialogPreference
             multiplier="100"
@@ -41,6 +22,15 @@
             android:key="talkKey"
             android:summary="@string/pttKeySum"
             android:title="@string/pttKey" />
+
+        <ListPreference
+            android:defaultValue="speakerphone"
+            android:dialogTitle="@string/callMode"
+            android:entries="@array/callModeNames"
+            android:entryValues="@array/callModeValues"
+            android:key="callMode"
+            android:summary="@string/callModeSum"
+            android:title="@string/callMode" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/appearance" >
         <ListPreference
@@ -84,6 +74,17 @@
             android:key="forceTcp"
             android:summary="@string/forceTcpSum"
             android:title="@string/forceTcp" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/authentication" >
+        <ListPreference
+            android:key="certificatePath"
+            android:summary="@string/certificateFileSum"
+            android:title="@string/certificateFile" />
+
+        <EditTextPreference
+            android:key="certificatePassword"
+            android:summary="@string/certificatePasswordSum"
+            android:title="@string/certificatePassword" />
     </PreferenceCategory>
 
 </PreferenceScreen>

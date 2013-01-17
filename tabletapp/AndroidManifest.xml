@@ -33,7 +33,9 @@
         </activity>
         <activity
             android:name="com.techfair.tabletapp.app.ServerInfo"
-            android:parentActivityName=".app.ServerList" />
+            android:excludeFromRecents="true"
+            android:parentActivityName=".app.ServerList"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name="com.techfair.tabletapp.app.ChannelActivity"
             android:launchMode="singleInstance" />

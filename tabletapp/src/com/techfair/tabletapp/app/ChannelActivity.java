@@ -50,7 +50,6 @@ import com.techfair.tabletapp.Settings;
 import com.techfair.tabletapp.Settings.PlumbleCallMode;
 import com.techfair.tabletapp.app.db.DbAdapter;
 import com.techfair.tabletapp.app.db.Favourite;
-import com.techfair.tabletapp.app.remotedb.TaskFragment;
 import com.techfair.tabletapp.service.BaseServiceObserver;
 import com.techfair.tabletapp.service.IServiceObserver;
 import com.techfair.tabletapp.service.model.Channel;

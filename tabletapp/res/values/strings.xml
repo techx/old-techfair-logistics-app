@@ -4,11 +4,11 @@
     <string name="channels">Channels</string>
     <string name="userJoin">Join channel</string>
     <string name="userSpeak">Speak</string>
-    <string name="noServers">no servers added</string>
+    <string name="noServers">no connection profiles added :(\nclick the "+" up top to make one!</string>
     <string name="noChannels">Channel list empty</string>
     <string name="noUsers">no users</string>
-    <string name="serverAdd">Add Server</string>
-    <string name="serverChange">Change Server</string>
+    <string name="serverAdd">Add User</string>
+    <string name="serverChange">Change Profile</string>
     <string name="serverPassword">Password (Optional)</string>
     <string name="serverUsername">Username</string>
     <string name="serverPort">Port</string>
@@ -16,7 +16,7 @@
     <string name="serverName">Label (Optional)</string>
     <string name="sendText">Send</string>
     <string name="app_name">TechieTalkie</string>
-    <string name="server_deleted">Server deleted</string>
+    <string name="server_deleted">Profile deleted</string>
     <string name="chat_message">Chat message</string>
     <string name="chatReceiverLabel">Receiver</string>
     <string name="chatReceiverPrompt">Select the receiver</string>
@@ -44,7 +44,7 @@
     <string name="chat">Chat</string>
     <string name="permDenied">Permission denied!</string>
     <string name="connectionRefused">Connection Refused</string>
-    <string name="sureDeleteServer">Are you sure you want to delete this server?</string>
+    <string name="sureDeleteServer">Are you sure you want to delete this connection profile?</string>
     <string name="disconnected">Disconnected</string>
     <string name="kickedMessage">Kicked from server. Reason: %s</string>
     <string name="loading">Loading…</string>
@@ -58,4 +58,5 @@
     <string name="favorites">Favorites</string>
     <string name="favouriteRemoved">Favourite removed.</string>
     <string name="favouriteAdded">Favourite added.</string>
+
 </resources>

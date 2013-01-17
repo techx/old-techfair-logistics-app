@@ -1,64 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:paddingRight="10dp"
-	android:paddingLeft="10dp">
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:orientation="vertical">
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/serverName"
-			android:text="@string/serverName"></TextView>
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:id="@+id/serverNameEdit"
-			android:inputType="text"></EditText>
-		<TextView
-			android:id="@+id/serverHost"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/serverHost"></TextView>
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:id="@+id/serverHostEdit"
-			android:inputType="textUri"></EditText>
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/serverPort"
-			android:id="@+id/serverPort"></TextView>
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:id="@+id/serverPortEdit"
-			android:inputType="number"
-			android:hint="@string/defaultServerPort"></EditText>
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/serverUsername"
-			android:id="@+id/serverUsername"></TextView>
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:id="@+id/serverUsernameEdit"
-			android:inputType="text"></EditText>
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/serverPassword"
-			android:text="@string/serverPassword"></TextView>
-		<EditText
-			android:layout_height="wrap_content"
-			android:id="@+id/serverPasswordEdit"
-			android:layout_width="fill_parent"
-			android:inputType="textPassword"></EditText>
-	</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please enter your username or go back and select your connection profile!"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/serverUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/serverUsername" />
+
+        <EditText
+            android:id="@+id/serverUsernameEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text" />
+
+        <LinearLayout
+            android:id="@+id/HiddenLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/serverName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/serverName" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/serverNameEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/serverHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/serverHost" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/serverHostEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/serverPort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/serverPort" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/serverPortEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/defaultServerPort"
+                android:inputType="number" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/serverPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/serverPassword" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/serverPasswordEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" >
+            </EditText>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:measureWithLargestChild="true"
+            android:orientation="horizontal"
+            android:paddingLeft="2dip"
+            android:paddingRight="2dip"
+            android:paddingTop="0dip" >
+
+            <Button
+                android:id="@+id/serverCancelButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@android:string/cancel" />
+
+            <ToggleButton
+                android:id="@+id/serverExpandButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:checked="false"
+                android:textOff="Advanced Mode"
+                android:textOn="Simple Mode" />
+
+            <Button
+                android:id="@+id/serverOkButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@android:string/ok" />
+        </LinearLayout>
+    </LinearLayout>
+
 </ScrollView>

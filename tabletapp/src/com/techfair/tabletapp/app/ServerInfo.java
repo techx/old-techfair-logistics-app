@@ -1,7 +1,11 @@
 package com.techfair.tabletapp.app;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -19,7 +23,8 @@ public class ServerInfo extends SherlockActivity {
 		final EditText usernameEdit = (EditText) findViewById(R.id.serverUsernameEdit);
 		final EditText passwordEdit = (EditText) findViewById(R.id.serverPasswordEdit);
 
-		final String name = (nameEdit).getText().toString().trim();
+		//final String name = (nameEdit).getText().toString().trim();
+		
 		final String host = (hostEdit).getText().toString().trim();
 
 		int port;
@@ -31,6 +36,8 @@ public class ServerInfo extends SherlockActivity {
 
 		final String username = (usernameEdit).getText().toString().trim();
 		final String password = (passwordEdit).getText().toString();
+		
+		final String name = username;
 
 		final DbAdapter db = new DbAdapter(this);
 
@@ -67,13 +74,58 @@ public class ServerInfo extends SherlockActivity {
 			Server server = db.fetchServer(serverId);
 			nameEdit.setText(server.getName());
 			hostEdit.setText(server.getHost());
-			portEdit.setText(server.getPort());
+			portEdit.setText(""+server.getPort());
 			usernameEdit.setText(server.getUsername());
 			passwordEdit.setText(server.getPassword());
 			
 			db.close();
+			
+			buttonSetup();
+		} else {
+	          final EditText nameEdit = (EditText) findViewById(R.id.serverNameEdit);
+	          final EditText hostEdit = (EditText) findViewById(R.id.serverHostEdit);
+	          final EditText portEdit = (EditText) findViewById(R.id.serverPortEdit);
+	          final EditText usernameEdit = (EditText) findViewById(R.id.serverUsernameEdit);
+	          final EditText passwordEdit = (EditText) findViewById(R.id.serverPasswordEdit);
+	          
+	          hostEdit.setText("vs11.tserverhq.com");
+	          portEdit.setText("64742");
+	          passwordEdit.setText("");
+	          
+	          buttonSetup();
 		}
 	}
+	
+   public void buttonSetup(){
+        final View extraSettings = findViewById(R.id.HiddenLayout);
+        final Button okButton = (Button) findViewById(R.id.serverOkButton);
+        final Button cancelButton = (Button) findViewById(R.id.serverCancelButton);
+        final Button expandButton = (ToggleButton) findViewById(R.id.serverExpandButton);
+        okButton.setOnClickListener(new View.OnClickListener(){
+          @Override
+          public void onClick(View v) {
+              save();
+          }
+         });
+         cancelButton.setOnClickListener(new View.OnClickListener(){
+              @Override
+              public void onClick(View v) {
+                  finish();
+              }
+            });
+         expandButton.setOnClickListener(new View.OnClickListener(){
+             @Override
+             public void onClick(View v) {
+                 boolean on = ((ToggleButton)v).isChecked();
+                 
+                 if(on){
+                     extraSettings.setVisibility(View.VISIBLE);
+                 } else {
+                     extraSettings.setVisibility(View.GONE);
+                 }
+             }
+           });
+         }
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
