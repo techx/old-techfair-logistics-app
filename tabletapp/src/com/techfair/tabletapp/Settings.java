@@ -98,7 +98,7 @@ public class Settings {
 	}
 	
 	public boolean isPushToTalk() {
-		return preferences.getString(PREF_METHOD, ARRAY_METHOD_VOICE).equals(ARRAY_METHOD_PTT);
+		return preferences.getString(PREF_METHOD, ARRAY_METHOD_PTT).equals(ARRAY_METHOD_PTT);
 	}
 	
 	public int getLastChannel(int serverId) {

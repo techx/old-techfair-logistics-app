@@ -6,7 +6,7 @@
     android:versionName="0.4" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -35,7 +35,7 @@
             android:name="com.techfair.tabletapp.app.ServerInfo"
             android:excludeFromRecents="true"
             android:parentActivityName=".app.ServerList"
-            android:theme="@android:style/Theme.Holo.Light.Dialog" />
+            android:theme="@style/Theme.Sherlock.Light.Dialog" />
         <activity
             android:name="com.techfair.tabletapp.app.ChannelActivity"
             android:launchMode="singleInstance" />

@@ -27,6 +27,7 @@
     <string name="defaultServerPort">64742</string>
     <string name="title_section2">Chat</string>
     <string name="title_section1">Users</string>
+    <string name="title_section3">Tasks</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_channel">Channel</string>
