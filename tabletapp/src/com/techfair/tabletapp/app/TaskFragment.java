@@ -36,7 +36,7 @@ public class TaskFragment extends SherlockFragment {
             }
         });
         mWebView.loadUrl(mUrl);
-        new ReloadWebView(this.getSherlockActivity(), 10, mWebView);
+        new ReloadWebView(this.getSherlockActivity(), 30, mWebView);
         return view;
     }
 
