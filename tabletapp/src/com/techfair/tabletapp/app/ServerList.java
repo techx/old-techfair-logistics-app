@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.lazydroid.autoupdateapk.AutoUpdateApk;
 import com.techfair.tabletapp.Globals;
 import com.techfair.tabletapp.R;
 import com.techfair.tabletapp.app.db.DbAdapter;
@@ -45,6 +46,9 @@ import org.json.JSONObject;
  * @author pcgod
  */
 public class ServerList extends ConnectedListActivity {
+    
+    private AutoUpdateApk aua;
+    
     private class ServerAdapter extends ArrayAdapter<Server> {
         private Context context;
         private List<Server> servers;
@@ -112,6 +116,7 @@ public class ServerList extends ConnectedListActivity {
 
     long serverToDeleteId = -1;
     DbAdapter dbAdapter;
+    
 
     private static final int ACTIVITY_ADD_SERVER = 0;
     private static final int ACTIVITY_CHANNEL_LIST = 1;
@@ -344,6 +349,9 @@ public class ServerList extends ConnectedListActivity {
 
         Crittercism.init(getApplicationContext(), "50ff74611abc696a94000006", crittercismConfig);
 
+        aua = new AutoUpdateApk(getApplicationContext());
+        
+        
         setContentView(R.layout.main);
 
         registerForContextMenu(getListView());
