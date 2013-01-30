@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.techfair.tabletapp"
     android:installLocation="auto"
-    android:versionCode="4"
-    android:versionName="1.0RC-2013.1.29" >
+    android:versionCode="5"
+    android:versionName="1.0RC-2013.1.30.2" >
 
     <uses-sdk
         android:minSdkVersion="8"

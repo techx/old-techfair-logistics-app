@@ -350,6 +350,7 @@ public class ServerList extends ConnectedListActivity {
         Crittercism.init(getApplicationContext(), "50ff74611abc696a94000006", crittercismConfig);
 
         aua = new AutoUpdateApk(getApplicationContext());
+        aua.checkUpdatesManually();
         
         
         setContentView(R.layout.main);
