@@ -31,10 +31,10 @@ public class ServerInfo extends SherlockActivity {
 		try {
 			port = Integer.parseInt((portEdit).getText().toString());
 		} catch (final NumberFormatException ex) {
-			port = 64738;
+			port = 64742;
 		}
 
-		final String username = (usernameEdit).getText().toString().trim();
+		final String username = (usernameEdit).getText().toString().trim().replace(" ", "_");
 		final String password = (passwordEdit).getText().toString();
 		
 		final String name = username;

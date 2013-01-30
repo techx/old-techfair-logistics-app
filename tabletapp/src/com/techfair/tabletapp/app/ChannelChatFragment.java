@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.crittercism.app.Crittercism;
 import com.techfair.tabletapp.R;
 import com.techfair.tabletapp.service.model.Message;
 
@@ -108,12 +109,17 @@ public class ChannelChatFragment extends SherlockFragment {
 
 	void addMessage(final Message msg) {
 		final SpannableStringBuilder sb = new SpannableStringBuilder();
-		sb.append("[");
-		sb.append(DateUtils.formatDateTime(
-			getActivity(),
-			msg.timestamp,
-			DateUtils.FORMAT_SHOW_TIME));
-		sb.append("] ");
+		String timestampString = "";
+		try{
+		    timestampString = "[" + (DateUtils.formatDateTime(
+		            getActivity(),
+		            msg.timestamp,
+		            DateUtils.FORMAT_SHOW_TIME)) + "] ";
+		} catch(Exception e){
+		    timestampString = "";
+		    Crittercism.logHandledException(e);
+		}
+		sb.append(timestampString);
 
 		if (msg.direction == Message.DIRECTION_SENT) {
 			sb.append("To ");

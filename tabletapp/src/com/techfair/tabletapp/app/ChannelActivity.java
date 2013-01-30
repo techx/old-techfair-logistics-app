@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -179,6 +180,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
         
         // If view pager is present, configure phone UI.
         if(mViewPager != null) {
+            mViewPager.setOffscreenPageLimit(2);
             // Create the adapter that will return a fragment for each of the three primary sections
             // of the app.
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -623,7 +625,7 @@ public class ChannelActivity extends ConnectedActivity implements ChannelProvide
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
      * sections of the app.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     	
         public SectionsPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);

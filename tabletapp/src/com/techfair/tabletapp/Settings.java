@@ -94,7 +94,7 @@ public class Settings {
 	}
 	
 	public boolean isVoiceActivity() {
-		return preferences.getString(PREF_METHOD, ARRAY_METHOD_VOICE).equals(ARRAY_METHOD_VOICE);
+		return preferences.getString(PREF_METHOD, ARRAY_METHOD_PTT).equals(ARRAY_METHOD_VOICE);
 	}
 	
 	public boolean isPushToTalk() {
