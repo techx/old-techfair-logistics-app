@@ -1,4 +1,4 @@
-logistics_app
+techx-logistics-app
 =============
 
 Android tablet app for use day-of by log team.
